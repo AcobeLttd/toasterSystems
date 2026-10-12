@@ -24,7 +24,7 @@ try:
                 blue.toggle()
                 try:
                     if msg == "shutdown":
-                        subprocess.run(["sudo", "shutdown", "-h", "now"])
+                        subprocess.run(["./home/lttd/toasterSystems/toasterSystems/ShutdownScript.sh"])
                 except subprocess.CalledProcessError:
                     print("Failed to run shutdown command.")
         #cheese = input("Send something to ESP32!: ")
@@ -33,7 +33,7 @@ try:
         sleep(1)
         g+=1
         print("hello world", g)
-except KeyboardInterupt:
+except KeyboardInterrupt:
     pass
 
 finally:
