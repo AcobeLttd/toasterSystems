@@ -24,6 +24,7 @@ try:
                 blue.toggle()
                 try:
                     if msg == "shutdown":
+                        print("Shutting down, bye bye!")
                         subprocess.run(["/home/lttd/toasterSystems/toasterSystems/ShutdownScript.sh"])
                 except subprocess.CalledProcessError:
                     print("Failed to run shutdown command.")
