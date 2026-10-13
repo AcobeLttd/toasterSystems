@@ -1,0 +1,13 @@
+[Unit]
+Description=ESP32 UART Serial Communication service.
+After=multi-user.target
+
+[Service]
+Type=simple
+User=lttd
+WorkingDirectory=/home/lttd/toasterSystems/toasterSystems
+ExecStart=/usr/bin/python3 -u /home/lttd/toasterSystems/toasterSystems/testing.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
