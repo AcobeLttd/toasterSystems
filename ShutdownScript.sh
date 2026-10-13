@@ -1,3 +1,3 @@
 #!/bin/bash
 #this a bash script for shutdown
-sudo shutdown now
+sudo -n shutdown now
