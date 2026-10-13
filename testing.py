@@ -14,7 +14,7 @@ ser = serial.Serial(
 )
 
 currentTime = time.monotonic()
-pastTime = time.monotonic()
+pastTime = 0
 
 print("Script started.")
 
@@ -38,8 +38,10 @@ try:
                 try:
                     if msg == "shutdown":
                         blue.blink()
+                        ser.write(b"Shutdown Recieved\n")
                         time.sleep(20)
                         blue.on()
+                        ser.write(b"Shutting down\n")
                         print("Shutting down, bye bye!")
                         subprocess.run(["sudo", "-n", "./toasterSystems/scripts/ShutdownScript.sh"])
                 except subprocess.CalledProcessError:
@@ -47,10 +49,10 @@ try:
         #cheese = input("Send something to ESP32!: ")
         #ser.write((cheese + "\n").encode("utf-8"))
         currentTime=time.monotonic()
-        if (currentTime-pastTime) >= 1:
+        if (currentTime-pastTime) >= 30:
             g+=1
             pastTime = currentTime
-            ser.write(("Pi Connected" + str(g) + "\n").encode("utf-8"))
+            ser.write(("Pi Connected "+str(g)+"\n").encode("utf-8"))
             print("hello world", g)
         
         
