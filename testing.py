@@ -43,7 +43,7 @@ try:
                         blue.on()
                         ser.write(b"Shutting down\n")
                         print("Shutting down, bye bye!")
-                        subprocess.run(["sudo", "-n", "./toasterSystems/scripts/ShutdownScript.sh"])
+                        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
                 except subprocess.CalledProcessError:
                     print("Failed to run shutdown command.")
         #cheese = input("Send something to ESP32!: ")
