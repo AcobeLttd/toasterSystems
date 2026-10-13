@@ -1,0 +1,1 @@
+Remember to put add shutdownScript.sh into the sudoers file as a bash file that can run without password auth.
