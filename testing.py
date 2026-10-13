@@ -46,12 +46,12 @@ try:
                     print("Failed to run shutdown command.")
         #cheese = input("Send something to ESP32!: ")
         #ser.write((cheese + "\n").encode("utf-8"))
-        #currentTime=time.monotonic()
-        #if (currentTime-pastTime) >= 1:
-            #g+=1
-            #pastTime = currentTime
-            #ser.write(("thingi" + str(g) + "\n").encode("utf-8"))
-            #print("hello world", g)
+        currentTime=time.monotonic()
+        if (currentTime-pastTime) >= 1:
+            g+=1
+            pastTime = currentTime
+            ser.write(("Pi Connected" + str(g) + "\n").encode("utf-8"))
+            print("hello world", g)
         
         
 except KeyboardInterrupt:
