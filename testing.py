@@ -26,7 +26,7 @@ try:
                 elif msg == "ltrue":
                     blue.on()
                 try:
-                if msg == "shutdown":
+                    if msg == "shutdown":
                         blue.blink()
                         print("Shutdown Recieved\n")
                         time.sleep(20)
@@ -35,7 +35,7 @@ try:
                         subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"], check=True)
                 except subprocess.CalledProcessError:
                     print("Failed to run shutdown command.")
-        expect queue.Empty:
+        except queue.Empty:
             pass
         currentTime=time.monotonic()
         if (currentTime-pastTime) >= 30:
