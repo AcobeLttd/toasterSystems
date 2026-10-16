@@ -43,7 +43,6 @@ def serialReading():
                             subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
                     except subprocess.CalledProcessError:
                         print("Failed to run shutdown command.")
-                    return msg
     except Exception as e:
         print(f"Serial monitor error{e}")
         pass
