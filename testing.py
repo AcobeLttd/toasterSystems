@@ -1,5 +1,4 @@
 from gpiozero import LED
-import serial
 import time
 import subprocess
 import esp32serialMonitoring
