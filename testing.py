@@ -17,7 +17,7 @@ print("Script started.")
 try:
     while True: #Infinite loop, sort of like void loop
     
-        msg = esp32serialMonitoring.serialReading.get_nowait()
+        msg = esp32serialMonitoring.serial_output.get_nowait()
         if msg:
             print("From ESP32", msg)
             if msg == "lfalse":
