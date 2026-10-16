@@ -52,6 +52,7 @@ def serialReading():
 def writeSerial(message):
     if ser is not None and ser.is_open:
         try:
+            print("Trying to write serial", message)
             ser.write((message + "\n").encode("utf-8"))
         except Exception as e:
             print(f"Error writing to serial: {e}")
