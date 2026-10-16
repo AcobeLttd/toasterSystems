@@ -2,17 +2,13 @@ from gpiozero import LED
 import serial
 import time
 import subprocess
-from esp32serialMonitoring import serialReading
+import esp32serialMonitoring
 
 blue = LED(17)
 g = 0
 #sets led pin to 17
 
-ser = serial.Serial(
-    "/dev/serial0",
-    115200,
-    timeout=0.1
-)
+serial_thread = esp32serialMonitoring.start()
 
 currentTime = time.monotonic()
 pastTime = 0
@@ -22,14 +18,9 @@ print("Script started.")
 try:
     while True: #Infinite loop, sort of like void loop
         if ser.in_waiting > 0:
-            msg = serialReading()
+            msg = esp32serialMonitoring.serialReading.get_nowait()
             if msg:
                 print("From ESP32", msg)
-                if msg == "ping":
-                    blue.on()
-                    print("Recieved ping, sending pong.")
-                    ser.write(b"pong\n")
-                    blue.off()
                 elif msg == "lfalse":
                     blue.off()
                 elif msg == "ltrue":
