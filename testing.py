@@ -20,7 +20,7 @@ try:
             msg = esp32serialMonitoring.serialReading.get_nowait()
             if msg:
                 print("From ESP32", msg)
-                elif msg == "lfalse":
+                if msg == "lfalse":
                     blue.off()
                 elif msg == "ltrue":
                     blue.on()
