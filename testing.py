@@ -42,11 +42,9 @@ try:
                         blue.on()
                         ser.write(b"Shutting down\n")
                         print("Shutting down, bye bye!")
-                        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
+                        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"], check=True)
                 except subprocess.CalledProcessError:
                     print("Failed to run shutdown command.")
-        #cheese = input("Send something to ESP32!: ")
-        #ser.write((cheese + "\n").encode("utf-8"))
         currentTime=time.monotonic()
         if (currentTime-pastTime) >= 30:
             g+=1
