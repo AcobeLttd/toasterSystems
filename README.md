@@ -1,7 +1,7 @@
-Dependencies
-time
-queue
-subprocess
-gpiozero
-that one matrix library
-prob something else im forgetting.
+Dependencies<br>
+time<br>
+queue<br>
+subprocess<br>
+gpiozero<br>
+that one matrix library<br>
+prob something else im forgetting.<br>
