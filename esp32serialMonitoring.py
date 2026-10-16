@@ -30,7 +30,7 @@ def serialReading():
         while not stop_event.is_set(): 
             try:
                 message = serial_to_send.get_nowait()
-                print("Trying to write serial", message)
+                print("Trying to write serial: ", message)
                 ser.write((message + "\n").encode("utf-8"))
             except queue.Empty:
                 pass

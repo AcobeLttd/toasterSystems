@@ -1,7 +1,6 @@
 from gpiozero import LED
 import queue
 import time
-import subprocess
 import esp32serialMonitoring
 
 blue = LED(17)
