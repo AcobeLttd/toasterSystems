@@ -4,7 +4,7 @@ import serial
 import time
 import subprocess
 
-serial_output = queue.Quene()
+serial_output = queue.Queue()
 
 stop_event = threading.Event()
 
