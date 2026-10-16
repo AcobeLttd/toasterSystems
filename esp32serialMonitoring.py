@@ -34,15 +34,15 @@ def serialReading():
                     if msg == "ping":
                         print("Recieved ping, sending pong.")
                         ser.write(b"pong\n")
-                    try:
-                        if msg == "shutdown":
+                    elif msg == "shutdown":
+                        try:
                             ser.write(b"Shutdown Recieved\n")
                             time.sleep(20)
                             ser.write(b"Shutting down\n")
                             print("Shutting down, bye bye!")
                             subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
-                    except subprocess.CalledProcessError:
-                        print("Failed to run shutdown command.")
+                        except subprocess.CalledProcessError:
+                            print("Failed to run shutdown command.")
     except Exception as e:
         print(f"Serial monitor error{e}")
         pass
