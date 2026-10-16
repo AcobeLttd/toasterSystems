@@ -16,6 +16,8 @@ ser = serial.Serial(
 currentTime = time.monotonic()
 pastTime = 0
 
+print("Code started")
+
 def serialReading():
     try:
         while True: 
