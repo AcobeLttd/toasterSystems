@@ -9,6 +9,7 @@ serial_output.put("Waiting for ESP32...")
 
 stop_event = threading.Event()
 
+ser = None
 
 currentTime = time.monotonic()
 pastTime = 0
@@ -50,11 +51,11 @@ def serialReading():
     finally:
         ser.close()
 def writeSerial(message):
-    global ser
-    try:
-        ser.write((message + "\n").encode("utf-8"))
-    except Exception as e:
-        print(f"Error writing to serial: {e}")
+    if ser is not None and ser.is_open:
+        try:
+            ser.write((message + "\n").encode("utf-8"))
+        except Exception as e:
+            print(f"Error writing to serial: {e}")
 
 def start():
     thread = threading.Thread(target=serialReading, daemon=False)
