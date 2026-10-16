@@ -2,6 +2,7 @@ from gpiozero import LED
 import serial
 import time
 import subprocess
+import esp32serialMonitoring
 
 blue = LED(17)
 g = 0
@@ -21,9 +22,7 @@ print("Script started.")
 try:
     while True: #Infinite loop, sort of like void loop
         if ser.in_waiting > 0:
-            msg = ser.readline().decode(
-                "utf-8", errors="replace"
-            ).strip()
+            msg = serialReading()
             if msg:
                 print("From ESP32", msg)
                 if msg == "ping":
