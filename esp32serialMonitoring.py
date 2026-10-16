@@ -5,6 +5,7 @@ import time
 import subprocess
 
 serial_output = queue.Queue()
+serial_output.put("Waiting for ESP32...")
 
 stop_event = threading.Event()
 
