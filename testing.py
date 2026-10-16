@@ -41,7 +41,7 @@ try:
         if (currentTime-pastTime) >= 30:
             g+=1
             pastTime = currentTime
-            esp32serialMonitoring.writeSerial("Pi Connected "+str(g)+"\n")
+            esp32serialMonitoring.writeSerial("Pi Connected "+str(g))
             print("hello world", g)
         
         
