@@ -2,7 +2,7 @@ from gpiozero import LED
 import serial
 import time
 import subprocess
-import esp32serialMonitoring
+from esp32serialMonitoring import serialReading
 
 blue = LED(17)
 g = 0
