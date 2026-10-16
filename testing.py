@@ -27,16 +27,12 @@ try:
                 elif msg == "ltrue":
                     blue.on()
                     esp32serialMonitoring.writeSerial("L T")
-                try:
-                    if msg == "shutdown":
-                        blue.blink()
-                        print("Shutdown Recieved\n")
-                        time.sleep(20)
-                        blue.on()
-                        print("Shutting down, bye bye!")
-                        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"], check=True)
-                except subprocess.CalledProcessError:
-                    print("Failed to run shutdown command.")
+                elif msg == "shutdown":
+                    blue.blink()
+                    print("Shutdown Recieved\n")
+                    time.sleep(20)
+                    blue.on()
+                    print("Shutting down, bye bye!")
         except queue.Empty:
             pass
         currentTime=time.monotonic()

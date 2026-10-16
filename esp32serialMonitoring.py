@@ -39,7 +39,6 @@ def serialReading():
                             ser.write(b"Shutdown Recieved\n")
                             time.sleep(20)
                             ser.write(b"Shutting down\n")
-                            print("Shutting down, bye bye!")
                             subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
                         except subprocess.CalledProcessError:
                             print("Failed to run shutdown command.")
