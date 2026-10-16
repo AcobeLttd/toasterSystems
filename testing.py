@@ -23,8 +23,10 @@ try:
                 print("From ESP32", msg)
                 if msg == "lfalse":
                     blue.off()
+                    esp32serialMonitoring.writeSerial("L F")
                 elif msg == "ltrue":
                     blue.on()
+                    esp32serialMonitoring.writeSerial("L T")
                 try:
                     if msg == "shutdown":
                         blue.blink()
