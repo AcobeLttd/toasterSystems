@@ -36,6 +36,7 @@ commands = {
     "lfalse": ledOn,
     "ltrue": ledOff,
     "shutdown": shutdownPrint,
+    "Waiting for ESP32...": lambda: None  
 }
 
 
