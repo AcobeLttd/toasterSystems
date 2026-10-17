@@ -72,6 +72,8 @@ def serialReading():
                             handler()
                         except Exception as e:
                             print(f"Error executing command '{msg}': {e}")
+                elif msg == "Waiting for ESP32...":
+                    pass
                 else:
                     serial_output.put(msg)
     except Exception as e:
