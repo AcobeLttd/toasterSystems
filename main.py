@@ -31,14 +31,11 @@ def shutdownPrint():
     currentTime = time.monotonic()
     pass
 
-def pinging(): #pinging handled by esp32serialMonitoring.py. This is just to stop errors from occuring.
-    pass
 
 commands = {
     "lfalse": ledOn,
     "ltrue": ledOff,
     "shutdown": shutdownPrint,
-    "ping": pinging
 }
 
 
