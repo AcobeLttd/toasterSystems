@@ -27,7 +27,7 @@ def shutdown():
         print("Failed to run shutdown command.")
 
 def sendPong():
-    print("Recieved ping, sending pong.")
+    print("From ESP32: Recieved ping \n sending pong.")
     try:
         ser.write(b"pong\n")
     except Exception as e:
