@@ -73,6 +73,15 @@ void pingDetect(String sah) {
   }
 }
 
+void detectPong(String readse) {
+  if (readse == "pong") {
+    pingTime = micros() - startPing;
+    totalPing = totalPing + pingTime;
+    Serial.printf("ping time %lu microsec \n", pingTime);
+    pingRec = true;
+  }
+}
+
 void multiplePing() {
   if (counter == 100) {
     pingToggle = false;
@@ -111,13 +120,8 @@ void loop() {
     connection = true;
     String readse = readSerial2();
     Serial.printf("From Pi: %s\n", readse.c_str());
-    if (readse == "pong") {
-      pingTime = micros() - startPing;
-      totalPing = totalPing + pingTime;
-      Serial.printf("ping time %lu microsec \n", pingTime);
-      pingRec = true;
-    }
-    if (readse == "Shutting down") {  //this stops the code from repeating the pining forever. You would need to power off to reset this.
+    detectPong(readse);
+    if (readse == "Shutting down") {  //this stops the code from repeating the pinging forever. You would need to power off to reset this.
       piOff = true;
     }
   }
@@ -131,5 +135,4 @@ void loop() {
 
   isPiThere();
   multiplePing();
-
 }
