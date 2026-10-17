@@ -1,3 +1,11 @@
+/* Eventually the entire code here is going to get a rewrite :3 i dont really like how it looks as of now. I would like to make it easier to interact with the serial reading/sending in the future. 
+What i want to implement in the future:
+  Better command management system, similar to how im handing it in on the pi. 
+  Integration for i2c and webserver in the future.
+  And thats basically it.
+  Also would want to improve the ping code cuz like holy sheet is it ass, maybe ill split it up into multiple files similarlly in how im doing it in python otherwise its going to get very big and unmanageble quickly.
+*/
+
 #include <Arduino.h>
 const uint8_t SerialTXPin = 43;
 const uint8_t SerialRXPin = 44;
@@ -35,6 +43,7 @@ String readSerial() {
   msg.trim();
   return msg;
 }
+
 
 void pingIng() {
   startPing = micros();
