@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#bash script to update things.
 set -e
 
 cd "$(dirname "$0")/.."
