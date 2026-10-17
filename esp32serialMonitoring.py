@@ -17,6 +17,29 @@ ser = None
 currentTime = time.monotonic()
 pastTime = 0
 
+def shutdown():
+    try:
+        ser.write(b"Shutdown Recieved\n")
+        time.sleep(20)
+        ser.write(b"Shutting down\n")
+        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
+    except subprocess.CalledProcessError:
+        print("Failed to run shutdown command.")
+
+def sendPong():
+    print("Recieved ping, sending pong.")
+    try:
+        ser.write(b"pong\n")
+    except Exception as e:
+        print(f"Error sending pong: {e}")
+
+commands = {
+    "shutdown": shutdown,
+    "ping": sendPong
+}
+
+
+
 def serialReading():
     global ser
     
@@ -38,25 +61,26 @@ def serialReading():
                 msg = ser.readline().decode(
                     "utf-8", errors="replace"
                 ).strip()
-                serial_output.put(msg)
-                if msg:
-                    if msg == "ping":
-                        print("Recieved ping, sending pong.")
-                        ser.write(b"pong\n")
-                    elif msg == "shutdown":
+                
+                if msg == "ping":
+                    sendPong()
+                elif msg in commands:
+                    handler = commands.get(msg)
+                    serial_output.put(msg)
+                    if handler is not None:
                         try:
-                            ser.write(b"Shutdown Recieved\n")
-                            time.sleep(20)
-                            ser.write(b"Shutting down\n")
-                            subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
-                        except subprocess.CalledProcessError:
-                            print("Failed to run shutdown command.")
+                            handler()
+                        except Exception as e:
+                            print(f"Error executing command '{msg}': {e}")
+                else:
+                    serial_output.put(msg)
     except Exception as e:
         print(f"Serial monitor error{e}")
         pass
 
     finally:
         ser.close()
+
 def writeSerial(message):
     serial_to_send.put(message)
 

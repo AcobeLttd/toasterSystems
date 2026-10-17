@@ -14,24 +14,49 @@ pastTime = 0
 
 print("Script started.")
 
+def ledOff():
+    blue.off()
+    esp32serialMonitoring.writeSerial("L F")
+
+def ledOn():
+    blue.on()
+    esp32serialMonitoring.writeSerial("L T")
+
+def shutdownPrint():
+    blue.blink()
+    print("Shutdown Recieved\n")
+    time.sleep(20)
+    blue.on()
+    print("Shutting down, bye bye!")
+    currentTime = time.monotonic()
+    pass
+
+def pinging(): #pinging handled by esp32serialMonitoring.py. This is just to stop errors from occuring.
+    pass
+
+commands = {
+    "lfalse": ledOn,
+    "ltrue": ledOff,
+    "shutdown": shutdownPrint,
+    "ping": pinging
+}
+
+
+
 try:
     while True: #Infinite loop, sort of like void loop
         try:
             msg = esp32serialMonitoring.serial_output.get(timeout=0.01)
             if msg:
                 print("From ESP32", msg)
-                if msg == "lfalse":
-                    blue.off()
-                    esp32serialMonitoring.writeSerial("L F")
-                elif msg == "ltrue":
-                    blue.on()
-                    esp32serialMonitoring.writeSerial("L T")
-                elif msg == "shutdown":
-                    blue.blink()
-                    print("Shutdown Recieved\n")
-                    time.sleep(20)
-                    blue.on()
-                    print("Shutting down, bye bye!")
+                handler = commands.get(msg)
+                if handler is not None:
+                    try:
+                        handler()
+                    except Exception as e:
+                        print(f"Error executing command '{msg}': {e}")
+                else: 
+                    print(f"No handler found for command '{msg}'")
         except queue.Empty:
             pass
         currentTime=time.monotonic()
