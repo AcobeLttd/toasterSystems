@@ -5,6 +5,19 @@ import pyudev
 udev_version :int = pyudev.udev_version()
 print("udev version:", udev_version)
 
+def debug_the_things(device):
+    print(
+        "\naction =", device.action,
+        "\ntype =", device.get("DEVTYPE"),
+        "\nnode =", device.device_node,
+        "\nsys_path =", device.sys_path,
+        "\nsubsystem =", device.subsystem,
+        "\nparent =", device.parent,
+        "\nID_FS_TYPE =", device.get("ID_FS_TYPE"),
+    )
+
+def check_if_partiton(device):
+
 
 def handle_event(device):
     context = pyudev.Context()
@@ -14,15 +27,13 @@ def handle_event(device):
     monitor.filter_by(subsystem='block')
     try:
         for device in iter(monitor.poll, None):
-            print(
-                "\naction =", device.action,
-                "\ntype =", device.get("DEVTYPE"),
-                "\nnode =", device.device_node,
-                "\nsys_path =", device.sys_path,
-            )
+            debug_the_things(device)
             try:
                 if device.get("DEVTYPE") != "partition":
                     print("oh shittings theres no partition!")
+                    continue
+                elif device.get("DEVTYPE") == "disk":
+                    print("oh shittings theres a disk!")
                     continue
 
                 usb_device = device.find_parent("usb", "usb_device")
