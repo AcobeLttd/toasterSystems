@@ -16,9 +16,9 @@ def handle_event(device):
         for device in iter(monitor.poll, None):
             print(
                 "action =", device.action,
-                "| type =", device.get("DEVTYPE"),
-                "| node =", device.device_node,
-                "| sys_path =", device.sys_path,
+                "\ntype =", device.get("DEVTYPE"),
+                "\nnode =", device.device_node,
+                "\nsys_path =", device.sys_path,
             )
             try:
                 if device.get("DEVTYPE") != "partition":
