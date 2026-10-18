@@ -29,13 +29,13 @@ def handle_event(device):
         for device in iter(monitor.poll, None):
             debug_the_things(device)
             try:
-                if device.get("DEVTYPE") != "partition":
+                if device.get("DEVTYPE") == "disk":
+                                    print("oh shittings theres a disk!")
+                                    continue
+                elif device.get("DEVTYPE") != "partition":
                     print("oh shittings theres no partition!")
                     continue
-                elif device.get("DEVTYPE") == "disk":
-                    print("oh shittings theres a disk!")
-                    continue
-
+                
                 usb_device = device.find_parent("usb", "usb_device")
                 if usb_device is None: 
                     print("oh shittings theres no usb device!")
