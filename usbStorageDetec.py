@@ -15,7 +15,7 @@ def handle_event(device):
     try:
         for device in iter(monitor.poll, None):
             print(
-                "action =", device.action,
+                "\naction =", device.action,
                 "\ntype =", device.get("DEVTYPE"),
                 "\nnode =", device.device_node,
                 "\nsys_path =", device.sys_path,
