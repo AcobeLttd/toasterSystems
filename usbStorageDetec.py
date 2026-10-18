@@ -16,7 +16,7 @@ def debug_the_things(device):
         "\nID_FS_TYPE =", device.get("ID_FS_TYPE"),
     )
 
-def check_if_partiton(device):
+# def check_if_partiton(device):
 
 
 def handle_event(device):
