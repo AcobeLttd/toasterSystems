@@ -16,7 +16,7 @@ def handle_event(device):
         for device in iter(monitor.poll, None):
             try:
                 if device.get("DEVTYPE") != "disk":
-                    print("oh shittings theres no diski!")
+                    print("oh shittings theres no diski!", device.get("DEVTYPE"), device)
                     continue
 
                 usb_device = device.find_parent("usb", "usb_device")
