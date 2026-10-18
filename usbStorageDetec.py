@@ -17,10 +17,12 @@ def handle_event(device):
             try:
                 if device.get("DEVTYPE") != "disk":
                     print("oh shittings theres no diski!")
+                    continue
 
                 usb_device = device.find_parent("usb", "usb_device")
                 if usb_device is None: 
                     print("oh shittings theres no usb device!")
+                    continue
 
                 action = device.action
                 path = device.device_node
@@ -39,4 +41,7 @@ def ohShittings():
     print("gay")
 
 if __name__ == "__main__":
-    handle_event(None)
+    try:
+        handle_event(None)
+    except KeyboardInterrupt:
+        print("Monitoring stopped by user.")
