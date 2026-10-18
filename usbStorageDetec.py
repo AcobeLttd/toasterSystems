@@ -14,11 +14,13 @@ def handle_event(device):
     monitor.filter_by(subsystem='block')
     for device in iter(monitor.poll, None):
         if device.get("DEVTYPE") != "disk":
-            return "oh shittings theres no diski!"
+            print("oh shittings theres no diski!")
+            return 
 
         usb_device = device.find_parent("usb", "usb_device")
         if usb_device is None: 
-            return "oh shittings theres no usb device!"
+            print("oh shittings theres no usb device!")
+            return 
 
         action = device.action
         path = device.device_node
