@@ -88,3 +88,6 @@ def start():
     thread = threading.Thread(target=serialReading, daemon=False)
     thread.start()
     return thread
+
+if __name__ == "__main__":
+    #for testing things.
