@@ -1,34 +1,35 @@
+
 from gpiozero import LED
 import queue
 import time
 import esp32serialMonitoring
 
 blue = LED(17)
-g = 0
+g: int= 0
 #sets led pin to 17
 
 serial_thread = esp32serialMonitoring.start()
 
-currentTime = time.monotonic()
-pastTime = 0
+currentTime :float= time.monotonic()
+pastTime :float= 0
 
 print("Script started.")
 
-def ledOff():
+def ledOff() -> None:
     blue.off()
     esp32serialMonitoring.writeSerial("L F")
 
-def ledOn():
+def ledOn() -> None:
     blue.on()
     esp32serialMonitoring.writeSerial("L T")
 
-def shutdownPrint():
+def shutdownPrint() -> None:
     blue.blink()
     print("Shutdown Recieved\n")
     time.sleep(20)
     blue.on()
     print("Shutting down, bye bye!")
-    currentTime = time.monotonic()
+    currentTime :float= time.monotonic()
     pass
 
 
@@ -44,10 +45,10 @@ commands = {
 try:
     while True: #Infinite loop, sort of like void loop
         try:
-            msg = esp32serialMonitoring.serial_output.get(timeout=0.01)
+            msg :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
             if msg:
                 print("From ESP32", msg)
-                handler = commands.get(msg)
+                handler :callable = commands.get(msg)
                 if handler is not None:
                     try:
                         handler()
@@ -57,7 +58,7 @@ try:
                     print(f"No handler found for command '{msg}'")
         except queue.Empty:
             pass
-        currentTime=time.monotonic()
+        currentTime :float= time.monotonic()
         if (currentTime-pastTime) >= 30:
             g+=1
             pastTime = currentTime

@@ -4,20 +4,20 @@ import serial
 import time
 import subprocess
 
-serial_output = queue.Queue()
+serial_output :queue.Queue[str] = queue.Queue()
 
 serial_output.put("Waiting for ESP32...")
 
-serial_to_send = queue.Queue()
+serial_to_send :queue.Queue[str] = queue.Queue()
 
 stop_event = threading.Event()
 
 ser = None
 
-currentTime = time.monotonic()
-pastTime = 0
+currentTime :float= time.monotonic()
+pastTime :float= 0
 
-def shutdown():
+def shutdown() -> None:
     try:
         ser.write(b"Shutdown Recieved\n")
         time.sleep(20)
@@ -26,7 +26,7 @@ def shutdown():
     except subprocess.CalledProcessError:
         print("Failed to run shutdown command.")
 
-def sendPong():
+def sendPong() -> None:
     print("From ESP32: Recieved ping \nSending pong.")
     try:
         ser.write(b"pong\n")
@@ -40,7 +40,7 @@ commands = {
 
 
 
-def serialReading():
+def serialReading() -> None:
     global ser
     
     try:
@@ -52,13 +52,13 @@ def serialReading():
         print("Serial started at 115200 baud rate.")
         while not stop_event.is_set(): 
             try:
-                message = serial_to_send.get_nowait()
+                message :str = serial_to_send.get_nowait()
                 print("Trying to write serial: ", message)
                 ser.write((message + "\n").encode("utf-8"))
             except queue.Empty:
                 pass
             if ser.in_waiting > 0:
-                msg = ser.readline().decode(
+                msg :str = ser.readline().decode(
                     "utf-8", errors="replace"
                 ).strip()
                 
@@ -81,10 +81,10 @@ def serialReading():
     finally:
         ser.close()
 
-def writeSerial(message):
+def writeSerial(message :str) -> None:
     serial_to_send.put(message)
 
-def start():
+def start() -> threading.Thread:
     thread = threading.Thread(target=serialReading, daemon=False)
     thread.start()
     return thread
