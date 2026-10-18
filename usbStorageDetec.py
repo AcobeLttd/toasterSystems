@@ -15,22 +15,22 @@ def handle_event(device):
     try:
         for device in iter(monitor.poll, None):
             try:
-                if device.get("DEVTYPE") != "disk":
-                    print("oh shittings theres no diski!", device.get("DEVTYPE"), device)
+                if device.get("DEVTYPE") != "partition":
+                    print("oh shittings theres no partition!", device)
                     continue
 
                 usb_device = device.find_parent("usb", "usb_device")
                 if usb_device is None: 
-                    print("oh shittings theres no usb device!")
+                    print("oh shittings theres no usb device!", device)
                     continue
 
                 action = device.action
                 path = device.device_node
 
                 if action == "add":
-                    print(f"USB storage device added: {path}")
+                    print(f"USB storage device added: {path}", device)
                 elif action == "remove":
-                    print(f"USB storage device removed: {path}")
+                    print(f"USB storage device removed: {path}", device)
             except (OSError, AttributeError) as e:
                 print(f"Error processing device event: {e}")
     except OSError as e:
