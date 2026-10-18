@@ -12,23 +12,27 @@ def handle_event(device):
     monitor = pyudev.Monitor.from_netlink(context)
 
     monitor.filter_by(subsystem='block')
-    for device in iter(monitor.poll, None):
-        if device.get("DEVTYPE") != "disk":
-            print("oh shittings theres no diski!")
-            return 
+    try:
+        for device in iter(monitor.poll, None):
+            try:
+                if device.get("DEVTYPE") != "disk":
+                    print("oh shittings theres no diski!")
 
-        usb_device = device.find_parent("usb", "usb_device")
-        if usb_device is None: 
-            print("oh shittings theres no usb device!")
-            return 
+                usb_device = device.find_parent("usb", "usb_device")
+                if usb_device is None: 
+                    print("oh shittings theres no usb device!")
 
-        action = device.action
-        path = device.device_node
+                action = device.action
+                path = device.device_node
 
-        if action == "add":
-            print(f"USB storage device added: {path}")
-        elif action == "remove":
-            print(f"USB storage device removed: {path}")
+                if action == "add":
+                    print(f"USB storage device added: {path}")
+                elif action == "remove":
+                    print(f"USB storage device removed: {path}")
+            except (OSError, AttributeError) as e:
+                print(f"Error processing device event: {e}")
+    except OSError as e:
+        print(f"Error monitoring USB storage devices: {e}")
     
 
 def ohShittings():
