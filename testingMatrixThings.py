@@ -14,11 +14,18 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.open("./test-images/blåhaj.png").convert("RGBA")
-image = image.resize((64, 32), Image.Resampling.LANCZOS)
+#image = Image.open("./test-images/blåhaj.png").convert("RGBA")
+#image = image.resize((64, 32), Image.Resampling.LANCZOS)
 
+#background = Image.new("RGBA", image.size, (0, 0, 0, 255))
+#image = Image.alpha_composite(background, image).convert("RGB")
+
+# Composite transparency onto black BEFORE resizing
 background = Image.new("RGBA", image.size, (0, 0, 0, 255))
 image = Image.alpha_composite(background, image).convert("RGB")
+
+# Resize only after transparency is removed
+image = image.resize((64, 32), Image.Resampling.LANCZOS)
 
 canvas = Image.new("RGB", (128, 32))
 
