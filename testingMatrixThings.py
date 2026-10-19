@@ -13,7 +13,7 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.open("/test-images/blåhaj.png").convert("RGB")
+image = Image.open("./test-images/blåhaj.png").convert("RGB")
 image = image.resize((128, 32), Image.Resampling.LANCZOS)
 
 
