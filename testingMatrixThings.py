@@ -11,7 +11,7 @@ options.hardware_mapping = "regular"
 matrix = RGBMatrix(options=options)
 
 image = Image.open("./test-images/blåhaj.png").convert("RGB")
-image = image.resize((64, 32), Image.Resampling.NEAREST)
+image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
 canvas = Image.new("RGB", (128, 32))
 mirrored = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
