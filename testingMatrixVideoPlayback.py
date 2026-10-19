@@ -14,14 +14,14 @@ options.chain_length = 2
 options.parallel = 1
 options.hardware_mapping = "regular"
 
-global matrix
 matrix = RGBMatrix(options=options)
-global offscreen
 offscreen = matrix.CreateFrameCanvas()
-global display_image
-display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+
 
 def playthe_video(path_to_video: str):
+    
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+
     cmd = [
         "ffmpeg",
         "-hide_banner", "-loglevel", "error",
