@@ -14,7 +14,7 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-
+image = Image.open("./test-images/actualPNGtest.png").convert("RGBA")
 # Make partially transparent pixels fully transparent,
 # and fully opaque pixels fully opaque.
 r, g, b, a = image.split()
