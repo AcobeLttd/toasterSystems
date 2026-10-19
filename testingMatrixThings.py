@@ -10,12 +10,11 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.new("RGB", (128, 32))
+image = Image.new("RGB", (128, 32), (0, 0, 0))
 draw = ImageDraw.Draw(image)
 
-draw.rectangle((0, 0, 63, 31), fill=(0, 0, 0))
-draw.rectangle((8, 2, 63, 21), fill=(0, 0, 0))
-
+draw.rectangle((0, 0, 63, 31), fill=(255, 0, 0))   # Left panel red
+draw.rectangle((64, 0, 127, 31), fill=(0, 255, 0)) # Right panel green
 
 matrix.SetImage(image)
 input("Press Enter to exit...")
