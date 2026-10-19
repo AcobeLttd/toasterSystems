@@ -15,15 +15,20 @@ options.hardware_mapping = "regular"
 matrix = RGBMatrix(options=options)
 
 image = Image.open("./test-images/blåhaj.png").convert("RGBA")
+# Fit the image to one panel
+image.thumbnail((64, 32), Image.Resampling.LANCZOS)
 
-# Composite transparency onto black at original size
-background = Image.new("RGBA", image.size, (0, 0, 0, 255))
-image = Image.alpha_composite(background, image).convert("RGB")
+# Center it on a transparent-sized black panel
+panel = Image.new("RGBA", (64, 32), (0, 0, 0, 255))
+x = (64 - image.width) // 2
+y = (32 - image.height) // 2
+panel.alpha_composite(image, (x, y))
 
-# Show the image at its original size, without resizing
+# Convert to RGB and duplicate, mirroring the second panel
+panel = panel.convert("RGB")
 canvas = Image.new("RGB", (128, 32), (0, 0, 0))
-canvas.paste(image, (0, 0))
-
+canvas.paste(panel, (0, 0))
+canvas.paste(panel.transpose(Image.Transpose.FLIP_LEFT_RIGHT), (64, 0))
 
 
 matrix.SetImage(canvas)
