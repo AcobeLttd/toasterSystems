@@ -10,6 +10,7 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
+
 image = Image.open("./test-media/toasterThing.png").convert("RGB")
 image = image.resize((64, 32), Image.Resampling.BICUBIC)
 

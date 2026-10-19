@@ -18,49 +18,56 @@ matrix = RGBMatrix(options=options)
 offscreen = matrix.CreateFrameCanvas()
 display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
-cmd = [
-    "ffmpeg",
-    "-hide_banner", "-loglevel", "error",
-    "-re",
-    "-i", "./test-media/theAppleThatIsBad.mp4",
-    "-an",
-    "-vf", "scale=64:32:flags=bicubic,fps=60",
-    "-pix_fmt", "rgb24",
-    "-f", "rawvideo",
-    "pipe:1",
-]
+def playt_video(path_to_video: str):
+    cmd = [
+        "ffmpeg",
+        "-hide_banner", "-loglevel", "error",
+        "-re",
+        "-i", path_to_video,
+        "-an",
+        "-vf", "scale=64:32:flags=bicubic,fps=60",
+        "-pix_fmt", "rgb24",
+        "-f", "rawvideo",
+        "pipe:1",
+    ]
 
-process = subprocess.Popen(
-    cmd,
-    stdout=subprocess.PIPE,
-    bufsize=FRAME_SIZE * 6,
-)
 
-try:
-    while True:
-        data = bytearray()
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        bufsize=FRAME_SIZE * 6,
+    )
 
-        while len(data) < FRAME_SIZE:
-            chunk = process.stdout.read(FRAME_SIZE - len(data))
-            if not chunk:
+
+    try:
+        while True:
+            data = bytearray()
+
+            while len(data) < FRAME_SIZE:
+                chunk = process.stdout.read(FRAME_SIZE - len(data))
+                if not chunk:
+                    break
+                data.extend(chunk)
+
+            if len(data) != FRAME_SIZE:
                 break
-            data.extend(chunk)
 
-        if len(data) != FRAME_SIZE:
-            break
+            frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
 
-        frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-
-        display_image.paste(frame, (0, 0))
+            display_image.paste(frame, (0, 0))
 
 
-        mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        display_image.paste(mirrored, (64, 0))
+            mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            display_image.paste(mirrored, (64, 0))
 
-        offscreen.SetImage(display_image)
-        offscreen = matrix.SwapOnVSync(offscreen)
+            offscreen.SetImage(display_image)
+            offscreen = matrix.SwapOnVSync(offscreen)
 
-finally:
-    process.terminate()
-    process.wait()
-    matrix.Clear()
+    finally:
+        process.terminate()
+        process.wait()
+        matrix.Clear()
+
+if __name__ == "__main__":
+    video_path = "./test-media/testVideo.mp4"
+    playt_video(video_path)
