@@ -24,9 +24,14 @@ image.putalpha(a)
 # Composite onto black
 background = Image.new("RGBA", image.size, (0, 0, 0, 255))
 image = Image.alpha_composite(background, image).convert("RGB")
+# Turn every non-black pixel pure white
+image = image.convert("RGB")
+image = image.convert("L").point(
+    lambda p: 255 if p > 40 else 0
+).convert("RGB")
 
 # Fit to one 64x32 panel
-image = image.resize((64, 32), Image.Resampling.LANCZOS)
+image = image.resize((64, 32), Image.Resampling.NEAREST)
 
 canvas = Image.new("RGB", (128, 32), (0, 0, 0))
 canvas.paste(image, (0, 0))
