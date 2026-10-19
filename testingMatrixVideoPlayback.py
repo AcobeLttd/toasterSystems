@@ -19,7 +19,8 @@ offscreen = matrix.CreateFrameCanvas()
 
 
 def playthe_video(path_to_video: str):
-    
+    global offscreen
+
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
     cmd = [
