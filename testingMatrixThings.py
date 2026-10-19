@@ -6,7 +6,7 @@ from PIL import Image
 
 
 options = RGBMatrixOptions()
-options.pwm_bits = 20
+options.pwm_bits = 11
 options.pwm_lsb_nanoseconds = 200
 options.rows = 32
 options.cols = 64
