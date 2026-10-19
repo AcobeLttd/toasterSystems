@@ -8,14 +8,12 @@ FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
 options = RGBMatrixOptions()
-options.gpio_slowdown = 3
-pwm_bits = 7
-pwm_lsb_nanoseconds = 130
 options.rows = 32
 options.cols = 64
 options.chain_length = 2
 options.parallel = 1
 options.hardware_mapping = "regular"
+options.show_refresh_rate = True
 
 matrix = RGBMatrix(options=options)
 offscreen = matrix.CreateFrameCanvas()
