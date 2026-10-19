@@ -3,7 +3,7 @@ import time
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-WIDTH, HEIGHT = 128, 32
+WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
@@ -22,7 +22,7 @@ cmd = [
     "-re",
     "-i", "./test-media/theAppleThatIsBad.mp4",
     "-an",
-    "-vf", "scale=128:32:flags=bicubic,fps=60",
+    "-vf", "scale=64:32:flags=bicubic,fps=60",
     "-pix_fmt", "rgb24",
     "-f", "rawvideo",
     "pipe:1",
@@ -48,7 +48,14 @@ try:
             break
 
         frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-        matrix.SetImage(frame)
+
+        canvas = Image.new("RGB", (WIDTH * 2, HEIGHT))
+        canvas.paste(frame, (0, 0))
+
+        mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        canvas.paste(mirrored, (WIDTH, 0))
+        
+        matrix.SetImage(canvas)
 
 finally:
     process.terminate()
