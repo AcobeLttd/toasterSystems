@@ -3,6 +3,10 @@ import time
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
+
+frames = 0
+start = time.monotonic()
+
 WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
@@ -59,7 +63,11 @@ try:
 
         offscreen.SetImage(display_image)
         offscreen = matrix.SwapOnVSync(offscreen)
+        frames += 1
 
+        if frames % 300 == 0:
+            elapsed = time.monotonic() - start
+            print(f"Average FPS: {frames / elapsed:.1f}")
 finally:
     process.terminate()
     process.wait()
