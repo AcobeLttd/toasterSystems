@@ -1,4 +1,3 @@
-
 from gpiozero import LED
 import queue
 import time
