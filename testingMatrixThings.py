@@ -10,7 +10,7 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.open("./test-images/toasterThing.png").convert("RGB")
+image = Image.open("./test-media/toasterThing.png").convert("RGB")
 image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
 canvas = Image.new("RGB", (128, 32))
