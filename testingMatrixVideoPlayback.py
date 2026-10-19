@@ -3,9 +3,10 @@ import time
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-
+last_time = time.monotonic()
+last_frames = 0
 frames = 0
-start = time.monotonic()
+
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
@@ -63,11 +64,18 @@ try:
 
         offscreen.SetImage(display_image)
         offscreen = matrix.SwapOnVSync(offscreen)
+
         frames += 1
 
-        if frames % 300 == 0:
-            elapsed = time.monotonic() - start
-            print(f"Average FPS: {frames / elapsed:.1f}")
+        if frames - last_frames >= 60:
+            now = time.monotonic()
+            elapsed = now - last_time
+            fps = (frames - last_frames) / elapsed
+
+            print(f"Interval FPS: {fps:.1f} | Time: {now:.1f}")
+
+            last_time = now
+            last_frames = frames
 finally:
     process.terminate()
     process.wait()
