@@ -4,6 +4,9 @@
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from PIL import Image
 
+options.pwm_bits = 11
+options.pwm_lsb_nanoseconds = 130
+options.gpio_slowdown = 4
 options = RGBMatrixOptions()
 options.rows = 32
 options.cols = 64
