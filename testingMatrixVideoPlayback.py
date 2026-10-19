@@ -69,5 +69,5 @@ def playt_video(path_to_video: str):
         matrix.Clear()
 
 if __name__ == "__main__":
-    video_path = "./test-media/testVideo.mp4"
+    video_path = "./test-media/theAppleThatIsBad.mp4"
     playt_video(video_path)
