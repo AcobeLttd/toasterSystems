@@ -14,9 +14,14 @@ options.hardware_mapping = "regular"
 matrix = RGBMatrix(options=options)
 
 image = Image.open("./test-images/blåhaj.png").convert("RGB")
-image = image.resize((128, 32), Image.Resampling.LANCZOS)
+image = image.resize((64, 32), Image.Resampling.LANCZOS)
+
+canvas = Image.new("RGB", (128, 32))
+
+canvas.paste(image, (0, 0))
+canvas.paste(image, (64, 0))
 
 
-matrix.SetImage(image)
+matrix.SetImage(canvas)
 input("Press Enter to exit...")
 matrix.Clear()
