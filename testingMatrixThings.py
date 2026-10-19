@@ -15,21 +15,23 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.open("./test-images/actualPNGtest.png").convert("RGBA")
-# Fit the image to one panel
-image.thumbnail((64, 32), Image.Resampling.LANCZOS)
 
-# Center it on a transparent-sized black panel
-panel = Image.new("RGBA", (64, 32), (0, 0, 0, 255))
-x = (64 - image.width) // 2
-y = (32 - image.height) // 2
-panel.alpha_composite(image, (x, y))
+# Make partially transparent pixels fully transparent,
+# and fully opaque pixels fully opaque.
+r, g, b, a = image.split()
+a = a.point(lambda p: 255 if p >= 128 else 0)
+image.putalpha(a)
 
-# Convert to RGB and duplicate, mirroring the second panel
-panel = panel.convert("RGB")
+# Composite onto black
+background = Image.new("RGBA", image.size, (0, 0, 0, 255))
+image = Image.alpha_composite(background, image).convert("RGB")
+
+# Fit to one 64x32 panel
+image = image.resize((64, 32), Image.Resampling.LANCZOS)
+
 canvas = Image.new("RGB", (128, 32), (0, 0, 0))
-canvas.paste(panel, (0, 0))
-canvas.paste(panel.transpose(Image.Transpose.FLIP_LEFT_RIGHT), (64, 0))
+canvas.paste(image, (0, 0))
+canvas.paste(image.transpose(Image.Transpose.FLIP_LEFT_RIGHT), (64, 0))
 
 
 matrix.SetImage(canvas)
