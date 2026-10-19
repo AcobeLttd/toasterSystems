@@ -22,7 +22,7 @@ cmd = [
     "-re",
     "-i", "./test-media/theAppleThatIsBad.mp4",
     "-an",
-    "-vf", "scale=64:32:flags=bicubic,fps=60",
+    "-vf", "scale=64:32:flags=nearest,fps=60",
     "-pix_fmt", "rgb24",
     "-f", "rawvideo",
     "pipe:1",
