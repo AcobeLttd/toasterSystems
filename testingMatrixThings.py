@@ -14,8 +14,8 @@ image = Image.new("RGB", (128, 32))
 draw = ImageDraw.Draw(image)
 
 draw.rectangle((0, 0, 63, 31), fill=(0, 0, 0))
-draw.rectangle((0, 0, 31, 31), fill=(255, 0, 0))
-draw.rectangle((32, 0, 63, 31), fill=(0, 255, 0))
+draw.rectangle((8, 2, 63, 21), fill=(0, 0, 0))
+
 
 matrix.SetImage(image)
 input("Press Enter to exit...")
