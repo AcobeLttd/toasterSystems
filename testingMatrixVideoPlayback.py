@@ -14,7 +14,7 @@ options.chain_length = 2
 options.parallel = 1
 options.hardware_mapping = "regular"
 options.show_refresh_rate = True
-options.brightness = 30
+options.brightness = 60
 
 matrix = RGBMatrix(options=options)
 offscreen = matrix.CreateFrameCanvas()
