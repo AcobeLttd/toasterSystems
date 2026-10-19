@@ -1,5 +1,6 @@
 import queue
 import threading
+import subprocess
 import pyudev
 
 udev_version :int = pyudev.udev_version()
@@ -15,6 +16,14 @@ def debug_the_things(device):
         "\nparent =", device.parent,
         "\nID_FS_TYPE =", device.get("ID_FS_TYPE"),
     )
+
+def mount_drive(path_to_device :str, path_to_mount_point :str):
+    try:
+        subprocess.run(["sudo", "-n", "mountThings.sh", path_to_device, path_to_mount_point])
+        pass
+    except subprocess.CalledProcessError as e:
+        print(f"something went wrong: {e}")
+        pass
 
 # def check_if_partiton(device):
 
