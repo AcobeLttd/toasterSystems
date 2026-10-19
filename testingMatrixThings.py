@@ -18,7 +18,9 @@ image = image.resize((64, 32), Image.Resampling.LANCZOS)
 
 canvas = Image.new("RGB", (128, 32))
 
-canvas.paste(image, (0, 0))
+mirrored = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+
+canvas.paste(mirrored, (0, 0))
 canvas.paste(image, (64, 0))
 
 
