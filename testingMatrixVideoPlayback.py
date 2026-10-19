@@ -14,11 +14,14 @@ options.chain_length = 2
 options.parallel = 1
 options.hardware_mapping = "regular"
 
+global matrix
 matrix = RGBMatrix(options=options)
+global offscreen
 offscreen = matrix.CreateFrameCanvas()
+global display_image
 display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
-def playt_video(path_to_video: str):
+def playthe_video(path_to_video: str):
     cmd = [
         "ffmpeg",
         "-hide_banner", "-loglevel", "error",
@@ -70,4 +73,4 @@ def playt_video(path_to_video: str):
 
 if __name__ == "__main__":
     video_path = "./test-media/theAppleThatIsBad.mp4"
-    playt_video(video_path)
+    playthe_video(video_path)
