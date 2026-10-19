@@ -14,7 +14,7 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.open("./test-images/blåhaj.png").convert("RGBA")
+image = Image.open("./test-images/actualPNGtest.png").convert("RGBA")
 # Fit the image to one panel
 image.thumbnail((64, 32), Image.Resampling.LANCZOS)
 
