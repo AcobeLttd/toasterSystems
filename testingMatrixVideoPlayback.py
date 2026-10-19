@@ -15,6 +15,8 @@ options.parallel = 1
 options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
+offscreen = matrix.CreateFrameCanvas()
+display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
 cmd = [
     "ffmpeg",
@@ -49,13 +51,14 @@ try:
 
         frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
 
-        canvas = Image.new("RGB", (WIDTH * 2, HEIGHT))
-        canvas.paste(frame, (0, 0))
+        display_image.paste(frame, (0, 0))
+
 
         mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        canvas.paste(mirrored, (WIDTH, 0))
+        display_image.paste(mirrored, (64, 0))
 
-        matrix.SetImage(canvas)
+        offscreen.SetImage(display_image)
+        offscreen = matrix.SwapOnVSync(offscreen)
 
 finally:
     process.terminate()
