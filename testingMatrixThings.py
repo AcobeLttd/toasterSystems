@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from PIL import Image, ImageDraw
+from PIL import Image
 
 options = RGBMatrixOptions()
 options.rows = 32
@@ -13,12 +13,9 @@ options.hardware_mapping = "regular"
 
 matrix = RGBMatrix(options=options)
 
-image = Image.new("RGB", (128, 32))
-draw = ImageDraw.Draw(image)
+image = Image.open("/test-images/blåhaj.png").convert("RGB")
+image = image.resize((128, 32), Image.Resampling.LANCZOS)
 
-image = Image.new("RGB", (128, 32), (0, 0, 0))
-image.paste((255, 0, 0), (0, 0, 64, 32))       # Red half
-image.paste((0, 255, 0), (64, 0, 128, 32))     # Green half
 
 matrix.SetImage(image)
 input("Press Enter to exit...")
