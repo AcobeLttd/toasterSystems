@@ -31,7 +31,7 @@ cmd = [
 process = subprocess.Popen(
     cmd,
     stdout=subprocess.PIPE,
-    bufsize=FRAME_SIZE * 4,
+    bufsize=FRAME_SIZE * 6,
 )
 
 try:
@@ -54,7 +54,7 @@ try:
 
         mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         canvas.paste(mirrored, (WIDTH, 0))
-        
+
         matrix.SetImage(canvas)
 
 finally:
