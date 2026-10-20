@@ -82,8 +82,6 @@ def playthe_video(path_to_video: str) -> None:
                 adjustBrightness(bright)
             except queue.Empty:
                 pass
-            if matrix.brightness != bright:
-                adjustBrightness(bright)
 
             mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             display_image.paste(mirrored, (64, 0))
