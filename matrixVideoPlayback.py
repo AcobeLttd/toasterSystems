@@ -8,6 +8,8 @@ stop_event = threading.Event()
 
 default_brightness :int=60
 
+matrix = None
+
 matrix_brightness : queue.Queue[int]= queue.Queue()
 matrix_brightness.put(default_brightness)
 
@@ -16,6 +18,7 @@ FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
 def adjustBrightness(brightness: int) -> None:
+    global matrix
     brightness = max(0, min(100, brightness))
     matrix.brightness = brightness
 
@@ -24,15 +27,7 @@ def playthe_video(path_to_video: str) -> None:
     global matrix
 
     print(f"Starting video playback for: {path_to_video}")
-    options = RGBMatrixOptions()
-    options.rows = 32
-    options.cols = 64
-    options.chain_length = 2
-    options.parallel = 1
-    options.hardware_mapping = "regular"
-    options.brightness = default_brightness
-
-    matrix = RGBMatrix(options=options)
+    
     offscreen = matrix.CreateFrameCanvas()
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
@@ -92,11 +87,22 @@ def playthe_video(path_to_video: str) -> None:
             process.terminate()
 
     finally:
+        print("terminating matrix")
         process.terminate()
         process.wait()
         matrix.Clear()
 
 def start(path_to_video: str) -> threading.Thread:
+    global matrix
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 2
+    options.parallel = 1
+    options.hardware_mapping = "regular"
+    options.brightness = default_brightness
+    
+    matrix = RGBMatrix(options=options)
     print(f"Starting video playback thread for: {path_to_video}")
     thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
