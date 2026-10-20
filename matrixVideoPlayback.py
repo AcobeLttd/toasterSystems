@@ -98,9 +98,14 @@ def playthe_video(path_to_video: str) -> None:
             offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
-        print("terminating matrix")
-        process.terminate()
-        process.wait()
+        print("Terminating FFmpeg")
+
+        if process.poll() is None:
+            process.terminate()
+
+        print("FFmpeg return code:", process.poll())
+
+        print("Clearing matrix")
         matrix.Clear()
 
 def start(path_to_video: str) -> threading.Thread:
