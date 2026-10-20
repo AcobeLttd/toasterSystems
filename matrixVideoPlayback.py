@@ -100,15 +100,10 @@ def playthe_video(path_to_video: str) -> None:
     finally:
         print("Cleaning up FFmpeg")
 
-        if process.poll() is None:
-            process.terminate()
-
-            try:
-                process.wait(timeout=2)
-            except subprocess.TimeoutExpired:
-                print("Force killing FFmpeg")
-                process.kill()
-                process.wait()
+    
+        print("Force killing FFmpeg")
+        process.kill()
+        process.wait()
 
         print("Clearing matrix")
         matrix.Clear()
