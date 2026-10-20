@@ -98,21 +98,17 @@ def playthe_video(path_to_video: str) -> None:
             offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
-        print("Terminating FFmpeg")
-
-        print("Terminating FFmpeg")
+        print("Cleaning up FFmpeg")
 
         if process.poll() is None:
             process.terminate()
 
-        try:
-            process.wait(timeout=2)
-            print("FFmpeg exited:", process.returncode)
-        except subprocess.TimeoutExpired:
-            print("FFmpeg did not exit; killing it")
-            process.kill()
-            process.wait(timeout=2)
-            print("FFmpeg killed:", process.returncode)
+            try:
+                process.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                print("Force killing FFmpeg")
+                process.kill()
+                process.wait()
 
         print("Clearing matrix")
         matrix.Clear()
