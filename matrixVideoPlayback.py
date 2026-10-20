@@ -31,7 +31,6 @@ def playthe_video(path_to_video: str):
         cmd = [
             "ffmpeg",
             "-hide_banner", "-loglevel", "error",
-            "-re",
             "-i", path_to_video,
             "-an",
             "-vf", "scale=64:32:flags=bicubic,fps=60",
