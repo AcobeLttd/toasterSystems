@@ -29,7 +29,7 @@ def ledStat(state :str):
         ledOff()
     else:
         print(f"Unknown state '{state}' for ledStat command.")
-        
+
 def shutdownPrint() -> None:
     blue.blink()
     print("Shutdown Recieved\n")
@@ -52,8 +52,8 @@ try:
     while True: #Infinite loop, sort of like void loop
         try:
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
-            fromEsp :str= fromEsp.lower
-            parts = fromEsp("|")
+            lowerCaseEsp:str= fromEsp.lower()
+            parts = lowerCaseEsp.split("|")
 
             msg = parts[0]
             args = parts[1:]
