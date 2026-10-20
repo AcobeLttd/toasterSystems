@@ -8,6 +8,8 @@ g: int= 0
 
 serial_thread = esp32serialMonitoring.start()
 
+matrixVideoPlayback.initMatrix()
+
 matrix_thread = None
 
 currentTime :float= time.monotonic()

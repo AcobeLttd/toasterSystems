@@ -17,6 +17,19 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
+def initMatrix() -> None:
+    global matrix
+
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 2
+    options.parallel = 1
+    options.hardware_mapping = "regular"
+    options.brightness = 60
+
+    matrix = RGBMatrix(options=options)
+
 def adjustBrightness(brightness: int) -> None:
     global matrix
     brightness = max(0, min(100, brightness))
@@ -93,16 +106,6 @@ def playthe_video(path_to_video: str) -> None:
         matrix.Clear()
 
 def start(path_to_video: str) -> threading.Thread:
-    global matrix
-    options = RGBMatrixOptions()
-    options.rows = 32
-    options.cols = 64
-    options.chain_length = 2
-    options.parallel = 1
-    options.hardware_mapping = "regular"
-    options.brightness = default_brightness
-    
-    matrix = RGBMatrix(options=options)
     print(f"Starting video playback thread for: {path_to_video}")
     thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
