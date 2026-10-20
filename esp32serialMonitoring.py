@@ -22,7 +22,7 @@ def shutdown() -> None:
         ser.write(b"Shutdown Recieved\n")
         time.sleep(20)
         ser.write(b"Shutting down\n")
-        subprocess.run(["./scripts/ShutdownScript.sh"])
+        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
     except subprocess.CalledProcessError:
         print("Failed to run shutdown command.")
 
