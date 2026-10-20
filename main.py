@@ -20,6 +20,7 @@ print("Script started.")
 
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
+    matrixVideoPlayback.stop_event.set()
     time.sleep(20)
     print("Shutting down, bye bye!")
     currentTime :float= time.monotonic()
