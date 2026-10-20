@@ -1,7 +1,10 @@
 import subprocess
-import time
+import threading
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
+
+
+stop_event = threading.Event()
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
@@ -73,6 +76,11 @@ def playthe_video(path_to_video: str):
         process.terminate()
         process.wait()
         matrix.Clear()
+
+def start(path_to_video: str) -> threading.Thread:
+    thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
+    thread.start()
+    return thread
 
 if __name__ == "__main__":
     video_path = "./test-media/theAppleThatIsBad.mp4"
