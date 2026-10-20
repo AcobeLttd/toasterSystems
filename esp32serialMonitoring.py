@@ -76,7 +76,7 @@ def serialReading() -> None:
                     serial_output.put(msg)
     except Exception as e:
         print(f"Serial monitor error{e}")
-        return
+        exit(1)
 
     finally:
         if ser is not None and ser.is_open:
