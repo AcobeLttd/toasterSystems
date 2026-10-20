@@ -3,6 +3,7 @@ import threading
 import serial
 import time
 import subprocess
+import os
 
 serial_output :queue.Queue[str] = queue.Queue()
 
@@ -22,6 +23,7 @@ def shutdown() -> None:
         ser.write(b"Shutdown Recieved\n")
         time.sleep(20)
         ser.write(b"Shutting down\n")
+        print("Python effective UID:", os.geteuid())
         subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
     except subprocess.CalledProcessError:
         print("Failed to run shutdown command.")
