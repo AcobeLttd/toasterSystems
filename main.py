@@ -3,7 +3,7 @@ import queue
 import time
 import esp32serialMonitoring
 
-blue = LED(17)
+blue = LED(12)
 g: int= 0
 #sets led pin to 17
 
