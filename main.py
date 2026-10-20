@@ -2,8 +2,8 @@ import queue
 import time
 import esp32serialMonitoring
 import matrixVideoPlayback
-
-
+import serial
+ser = None
 
 g: int= 0
 
