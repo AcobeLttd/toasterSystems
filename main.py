@@ -8,6 +8,8 @@ g: int= 0
 
 serial_thread = esp32serialMonitoring.start()
 
+matrix_thread = None
+
 currentTime :float= time.monotonic()
 pastTime :float= 0
 
@@ -22,11 +24,22 @@ def shutdownPrint() -> None:
     pass
 
 def playMatrixVideo(path_to_video :str) -> None:    
+    global matrix_thread
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
         matrixVideoPlayback.stop_event.set()
+        if matrix_thread is not None:
+            matrix_thread.join(timeout=3)
+
+            if matrix_thread.is_alive():
+                print("Playback thread is still stopping.")
+                return
+
+            matrix_thread = None
+
         return
+    
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
