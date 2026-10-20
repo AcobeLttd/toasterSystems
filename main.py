@@ -2,8 +2,8 @@ import queue
 import time
 import esp32serialMonitoring
 import matrixVideoPlayback
-import serial
-ser = None
+
+
 
 g: int= 0
 
@@ -43,21 +43,7 @@ commands :dict = {
     "Waiting for ESP32...": lambda: None  
 }
 
-try:
-    ser = serial.Serial(
-            "/dev/serial0",
-            115200,
-            timeout=0.1
-        )
-        
-except Exception as e:
-    print(f"Serial monitor error{e}")
-    exit(1)
-        
-finally:
-    if ser is not None and ser.is_open:
-        ser.close()
-        print("Serial connection closed.")
+
 
 try:
     while True: #Infinite loop, sort of like void loop
