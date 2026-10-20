@@ -100,10 +100,19 @@ def playthe_video(path_to_video: str) -> None:
     finally:
         print("Terminating FFmpeg")
 
+        print("Terminating FFmpeg")
+
         if process.poll() is None:
             process.terminate()
 
-        print("FFmpeg return code:", process.poll())
+        try:
+            process.wait(timeout=2)
+            print("FFmpeg exited:", process.returncode)
+        except subprocess.TimeoutExpired:
+            print("FFmpeg did not exit; killing it")
+            process.kill()
+            process.wait(timeout=2)
+            print("FFmpeg killed:", process.returncode)
 
         print("Clearing matrix")
         matrix.Clear()
