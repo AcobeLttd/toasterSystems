@@ -1,28 +1,18 @@
 import subprocess
 import threading
-import queue
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
-default_brightness :int=60
-
-matrix_brightness : queue.Queue[int]= queue.Queue()
-matrix_brightness.put(default_brightness)
-
 WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
-def adjustBrightness(brightness: int) -> None:
-    brightness = max(0, min(100, brightness))
-    matrix.brightness = brightness
 
 
-def playthe_video(path_to_video: str) -> None:
-    global matrix
 
+def playthe_video(path_to_video: str):
     print(f"Starting video playback for: {path_to_video}")
     options = RGBMatrixOptions()
     options.rows = 32
@@ -30,7 +20,8 @@ def playthe_video(path_to_video: str) -> None:
     options.chain_length = 2
     options.parallel = 1
     options.hardware_mapping = "regular"
-    options.brightness = default_brightness
+    options.show_refresh_rate = True
+    options.brightness = 60
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
@@ -61,7 +52,6 @@ def playthe_video(path_to_video: str) -> None:
 
     try:
         while not stop_event.is_set():
-
             data = bytearray()
 
             while len(data) < FRAME_SIZE:
@@ -77,11 +67,6 @@ def playthe_video(path_to_video: str) -> None:
 
             display_image.paste(frame, (0, 0))
 
-            try:
-                bright = matrix_brightness.get_nowait()
-                adjustBrightness(bright)
-            except queue.Empty:
-                pass
 
             mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             display_image.paste(mirrored, (64, 0))
