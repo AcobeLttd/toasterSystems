@@ -96,9 +96,7 @@ def playthe_video(path_to_video: str) -> None:
 
             offscreen.SetImage(display_image)
             offscreen = matrix.SwapOnVSync(offscreen)
-        else:
-            process.terminate()
-
+ 
     finally:
         print("terminating matrix")
         process.terminate()
