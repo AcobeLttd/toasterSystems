@@ -13,6 +13,7 @@ FRAME_SIZE = WIDTH * HEIGHT * 3
 
 
 def playthe_video(path_to_video: str):
+    print(f"Starting video playback for: {path_to_video}")
     options = RGBMatrixOptions()
     options.rows = 32
     options.cols = 64
