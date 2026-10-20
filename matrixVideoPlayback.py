@@ -30,7 +30,7 @@ def playthe_video(path_to_video: str) -> None:
     options.chain_length = 2
     options.parallel = 1
     options.hardware_mapping = "regular"
-    options.brightness = matrix_brightness.get(timeout=0.01)
+    options.brightness = default_brightness
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
@@ -82,6 +82,8 @@ def playthe_video(path_to_video: str) -> None:
                 adjustBrightness(bright)
             except queue.Empty:
                 pass
+            if matrix.brightness != bright:
+                adjustBrightness(bright)
 
             mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             display_image.paste(mirrored, (64, 0))
