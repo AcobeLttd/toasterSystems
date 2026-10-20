@@ -1,18 +1,27 @@
 import subprocess
 import threading
+import queue
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
+matrix_output = queue.Queue()
+
+matrix_input = queue.Queue()
+
 WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
+def adjustBrightness(brightness: int) -> None:
+    brightness = max(0, min(100, brightness))
+    matrix.brightness = brightness
 
 
+def playthe_video(path_to_video: str) -> None:
+    global matrix
 
-def playthe_video(path_to_video: str):
     print(f"Starting video playback for: {path_to_video}")
     options = RGBMatrixOptions()
     options.rows = 32
@@ -52,6 +61,10 @@ def playthe_video(path_to_video: str):
 
     try:
         while not stop_event.is_set():
+            bright = matrix_input.get(timeout=0.01)
+            if not None:
+                adjustBrightness(bright)
+
             data = bytearray()
 
             while len(data) < FRAME_SIZE:

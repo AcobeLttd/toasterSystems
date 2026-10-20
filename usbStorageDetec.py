@@ -28,7 +28,7 @@ def mount_drive(path_to_device :str, path_to_mount_point :str):
 # def check_if_partiton(device):
 
 
-def handle_event(device):
+def handle_event(device) -> None:
     context = pyudev.Context()
 
     monitor = pyudev.Monitor.from_netlink(context)

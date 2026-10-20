@@ -35,10 +35,22 @@ def playMatrixVideo(path_to_video :str) -> None:
         print(f"Error playing video '{path_to_video}': {e}")
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
 
+def matrixBrightness(brightness :str) -> None:
+    matrixVideoPlayback.matrix_input.put(brightness)
+
+def matrixFunctions(command :str, argument :str, *args :str):
+    if args is not None:
+        if command == "play":
+            playMatrixVideo(argument)        
+        elif command == "brightness" or "br":
+            matrixBrightness(argument)
+        else:
+            print(f"{command} not recognized as a command.")
+            esp32serialMonitoring.writeSerial(f"{command} not recognized as a command for matrix.")
 
 commands :dict = {
     "shutdown": shutdownPrint,
-    "play matrix": playMatrixVideo,
+    "matrix": playMatrixVideo,
     "Waiting for ESP32...": lambda: None  
 }
 
