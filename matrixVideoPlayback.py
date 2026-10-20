@@ -6,9 +6,10 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
-matrix_output = queue.Queue()
+default_brightness :int=60
 
-matrix_input = queue.Queue()
+matrix_brightness : queue.Queue[int]= queue.Queue()
+matrix_brightness.put(default_brightness)
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
@@ -30,7 +31,7 @@ def playthe_video(path_to_video: str) -> None:
     options.parallel = 1
     options.hardware_mapping = "regular"
     options.show_refresh_rate = True
-    options.brightness = 60
+    options.brightness = matrix_brightness.get(timeout=0.01)
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
@@ -77,6 +78,8 @@ def playthe_video(path_to_video: str) -> None:
 
             display_image.paste(frame, (0, 0))
 
+            bright = matrix_brightness.get(timeout=0.01)
+            adjustBrightness(bright)
 
             mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             display_image.paste(mirrored, (64, 0))

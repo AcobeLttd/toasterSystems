@@ -36,7 +36,7 @@ def playMatrixVideo(path_to_video :str) -> None:
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
 
 def matrixBrightness(brightness :str) -> None:
-    matrixVideoPlayback.matrix_input.put(brightness)
+    matrixVideoPlayback.matrix_brightness.put(brightness)
 
 def matrixFunctions(command :str, argument :str, *args :str):
     if args is not None:
