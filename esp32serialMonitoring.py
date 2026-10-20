@@ -79,7 +79,9 @@ def serialReading() -> None:
         pass
 
     finally:
-        ser.close()
+        if ser is not None and ser.is_open:
+            ser.close()
+            print("Serial connection closed.")
 
 def writeSerial(message :str) -> None:
     serial_to_send.put(message)
