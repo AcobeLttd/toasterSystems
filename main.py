@@ -23,8 +23,13 @@ def ledOn() -> None:
     esp32serialMonitoring.writeSerial("L T")
 
 def ledStat(state :str):
-    if state == "on"
-
+    if state == "on":
+        ledOn()
+    elif state == "off":
+        ledOff()
+    else:
+        print(f"Unknown state '{state}' for ledStat command.")
+        
 def shutdownPrint() -> None:
     blue.blink()
     print("Shutdown Recieved\n")
