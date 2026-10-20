@@ -91,4 +91,5 @@ except KeyboardInterrupt:
 finally:
     print("byteyyrtrey")
     esp32serialMonitoring.stop_event.set()
+    matrixVideoPlayback.stop_event.set()
     serial_thread.join(timeout=3)

@@ -30,7 +30,6 @@ def playthe_video(path_to_video: str) -> None:
     options.chain_length = 2
     options.parallel = 1
     options.hardware_mapping = "regular"
-    options.show_refresh_rate = True
     options.brightness = matrix_brightness.get(timeout=0.01)
 
     matrix = RGBMatrix(options=options)
@@ -79,7 +78,7 @@ def playthe_video(path_to_video: str) -> None:
             display_image.paste(frame, (0, 0))
 
             try:
-                bright = matrix_brightness.get(timeout=0.01)
+                bright = matrix_brightness.get_nowait()
                 adjustBrightness(bright)
             except queue.Empty:
                 pass
