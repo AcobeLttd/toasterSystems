@@ -36,8 +36,7 @@ def shutdownPrint() -> None:
 
 
 commands :dict = {
-    "l": ledOn,
-    "ltrue": ledOff,
+    "l": ledStat,
     "shutdown": shutdownPrint,
     "Waiting for ESP32...": lambda: None  
 }
