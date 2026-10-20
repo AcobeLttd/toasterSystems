@@ -61,9 +61,6 @@ def playthe_video(path_to_video: str) -> None:
 
     try:
         while not stop_event.is_set():
-            bright = matrix_input.get(timeout=0.01)
-            if not None:
-                adjustBrightness(bright)
 
             data = bytearray()
 
