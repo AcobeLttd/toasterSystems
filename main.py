@@ -62,19 +62,20 @@ try:
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
             parts = fromEsp.split("|")
 
-            msg = parts[0]
+            cmd = parts[0]
             args = parts[1:]
 
-            if msg:
+            if fromEsp:
                 print("From ESP32", msg)
-                handler :callable = commands.get(msg)
-                if handler is not None:
-                    try:
-                        handler(*args)
-                    except Exception as e:
-                        print(f"Error executing command '{msg}': {e}")
-                else: 
-                    print(f"No handler found for command '{msg}'")
+                if cmd:
+                    handler :callable = commands.get(cmd)
+                    if handler is not None:
+                        try:
+                            handler(*args)
+                        except Exception as e:
+                            print(f"Error executing command '{cmd}': {e}")
+                    else: 
+                        print(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
         currentTime :float= time.monotonic()
