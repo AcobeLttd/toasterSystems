@@ -66,7 +66,7 @@ try:
             args = parts[1:]
 
             if fromEsp:
-                print("From ESP32", msg)
+                print("From ESP32", fromEsp)
                 if cmd:
                     handler :callable = commands.get(cmd)
                     if handler is not None:
