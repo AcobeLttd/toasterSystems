@@ -48,8 +48,7 @@ try:
     while True: #Infinite loop, sort of like void loop
         try:
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
-            lowerCaseEsp:str= fromEsp.lower()
-            parts = lowerCaseEsp.split("|")
+            parts = fromEsp.split("|")
 
             msg = parts[0]
             args = parts[1:]
