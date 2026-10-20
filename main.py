@@ -22,6 +22,9 @@ def ledOn() -> None:
     blue.on()
     esp32serialMonitoring.writeSerial("L T")
 
+def ledStat(state :str):
+    if state == "on"
+
 def shutdownPrint() -> None:
     blue.blink()
     print("Shutdown Recieved\n")
@@ -32,8 +35,8 @@ def shutdownPrint() -> None:
     pass
 
 
-commands = {
-    "lfalse": ledOn,
+commands :dict = {
+    "l": ledOn,
     "ltrue": ledOff,
     "shutdown": shutdownPrint,
     "Waiting for ESP32...": lambda: None  
@@ -44,13 +47,19 @@ commands = {
 try:
     while True: #Infinite loop, sort of like void loop
         try:
-            msg :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
+            fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
+            fromEsp :str= fromEsp.lower
+            parts = fromEsp("|")
+
+            msg = parts[0]
+            args = parts[1:]
+
             if msg:
                 print("From ESP32", msg)
                 handler :callable = commands.get(msg)
                 if handler is not None:
                     try:
-                        handler()
+                        handler(*args)
                     except Exception as e:
                         print(f"Error executing command '{msg}': {e}")
                 else: 
