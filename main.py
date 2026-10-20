@@ -22,6 +22,11 @@ def shutdownPrint() -> None:
     pass
 
 def playMatrixVideo(path_to_video :str) -> None:    
+    if path_to_video == "stop":
+        print("Stopping video playback.")
+        esp32serialMonitoring.writeSerial("Stopping video playback.")
+        matrixVideoPlayback.stop_event.set()
+        return
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
@@ -29,10 +34,6 @@ def playMatrixVideo(path_to_video :str) -> None:
     except Exception as e:
         print(f"Error playing video '{path_to_video}': {e}")
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
-    finally:
-        matrixVideoPlayback.stop_event.set()
-        matrix_thread.join(timeout=3)
-
 
 
 commands :dict = {

@@ -80,10 +80,11 @@ def playthe_video(path_to_video: str):
         matrix.Clear()
 
 def start(path_to_video: str) -> threading.Thread:
+    print(f"Starting video playback thread for: {path_to_video}")
     thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
     return thread
 
 if __name__ == "__main__":
     video_path = "./test-media/theAppleThatIsBad.mp4"
-    playthe_video(video_path)
+    start(video_path)
