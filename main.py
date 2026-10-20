@@ -50,7 +50,7 @@ def matrixFunctions(command :str, argument :str, *args :str):
 
 commands :dict = {
     "shutdown": shutdownPrint,
-    "matrix": playMatrixVideo,
+    "matrix": matrixFunctions,
     "Waiting for ESP32...": lambda: None  
 }
 
