@@ -2,7 +2,7 @@ from gpiozero import LED
 import queue
 import time
 import esp32serialMonitoring
-import matrxiVideoPlayback
+import matrixVideoPlayback
 
 
 blue = LED(12)
@@ -44,7 +44,15 @@ def shutdownPrint() -> None:
 def playMatrixVideo(path_to_video :str) -> None:    
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
-    matrxiVideoPlayback.playthe_video(path_to_video)
+    try:
+        matrix_thread = matrixVideoPlayback.start(path_to_video)
+    except Exception as e:
+        print(f"Error playing video '{path_to_video}': {e}")
+        esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
+    finally:
+        matrixVideoPlayback.stop_event.set()
+        matrix_thread.join(timeout=3)
+
 
 
 commands :dict = {

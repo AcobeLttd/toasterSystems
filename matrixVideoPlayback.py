@@ -3,7 +3,6 @@ import threading
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-
 stop_event = threading.Event()
 
 WIDTH, HEIGHT = 64, 32
@@ -27,19 +26,21 @@ def playthe_video(path_to_video: str):
     global offscreen
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-
-    cmd = [
-        "ffmpeg",
-        "-hide_banner", "-loglevel", "error",
-        "-re",
-        "-i", path_to_video,
-        "-an",
-        "-vf", "scale=64:32:flags=bicubic,fps=60",
-        "-pix_fmt", "rgb24",
-        "-f", "rawvideo",
-        "pipe:1",
-    ]
-
+    try:
+        cmd = [
+            "ffmpeg",
+            "-hide_banner", "-loglevel", "error",
+            "-re",
+            "-i", path_to_video,
+            "-an",
+            "-vf", "scale=64:32:flags=bicubic,fps=60",
+            "-pix_fmt", "rgb24",
+            "-f", "rawvideo",
+            "pipe:1",
+        ]
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing ffmpeg command: {e}")
+        return
 
     process = subprocess.Popen(
         cmd,
@@ -49,7 +50,7 @@ def playthe_video(path_to_video: str):
 
 
     try:
-        while True:
+        while not stop_event.is_set():
             data = bytearray()
 
             while len(data) < FRAME_SIZE:
