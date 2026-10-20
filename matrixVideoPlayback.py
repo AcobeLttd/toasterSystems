@@ -78,8 +78,11 @@ def playthe_video(path_to_video: str) -> None:
 
             display_image.paste(frame, (0, 0))
 
-            bright = matrix_brightness.get(timeout=0.01)
-            adjustBrightness(bright)
+            try:
+                bright = matrix_brightness.get(timeout=0.01)
+                adjustBrightness(bright)
+            except queue.Empty:
+                pass
 
             mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
             display_image.paste(mirrored, (64, 0))
