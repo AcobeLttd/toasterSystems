@@ -9,21 +9,21 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
-options = RGBMatrixOptions()
-options.rows = 32
-options.cols = 64
-options.chain_length = 2
-options.parallel = 1
-options.hardware_mapping = "regular"
-options.show_refresh_rate = True
-options.brightness = 60
 
-matrix = RGBMatrix(options=options)
-offscreen = matrix.CreateFrameCanvas()
 
 
 def playthe_video(path_to_video: str):
-    global offscreen
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 2
+    options.parallel = 1
+    options.hardware_mapping = "regular"
+    options.show_refresh_rate = True
+    options.brightness = 60
+
+    matrix = RGBMatrix(options=options)
+    offscreen = matrix.CreateFrameCanvas()
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
     try:

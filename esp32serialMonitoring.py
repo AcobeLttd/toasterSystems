@@ -12,11 +12,7 @@ serial_to_send :queue.Queue[str] = queue.Queue()
 
 stop_event = threading.Event()
 
-ser = serial.Serial(
-        "/dev/serial0",
-        115200,
-        timeout=0.1
-    )
+ser = None
 
 currentTime :float= time.monotonic()
 pastTime :float= 0
@@ -48,6 +44,11 @@ def serialReading() -> None:
     global ser
     
     try:
+        ser = serial.Serial(
+                "/dev/serial0",
+                115200,
+                timeout=0.1
+            )
         print("Serial started at 115200 baud rate.")
         while not stop_event.is_set(): 
             try:
@@ -75,7 +76,6 @@ def serialReading() -> None:
                     serial_output.put(msg)
     except Exception as e:
         print(f"Serial monitor error{e}")
-        exit(1)
 
     finally:
         if ser is not None and ser.is_open:
