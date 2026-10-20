@@ -3,8 +3,6 @@ import time
 import esp32serialMonitoring
 import matrixVideoPlayback
 
-
-
 g: int= 0
 
 
