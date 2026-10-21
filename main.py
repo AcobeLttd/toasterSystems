@@ -34,6 +34,7 @@ def playMatrixVideo(path_to_video :str) -> None:
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
         matrixDisplay.stop_event.set()
+        matrixDisplay.default()
         if matrix_thread is not None:
             matrix_thread.join(timeout=3)
 
