@@ -131,8 +131,6 @@ def playthe_video(path_to_video: str) -> None:
         process.kill()
         process.wait()
 
-        print("Defaulting")
-        default()
 
 def start(path_to_video: str) -> threading.Thread:
     print(f"Starting video playback thread for: {path_to_video}")
