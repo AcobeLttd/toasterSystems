@@ -6,6 +6,10 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
+send_command :queue.Queue[str] = queue.Queue()
+
+matrix_output :queue.Queue[str] = queue.Queue()
+
 default_brightness :int=60
 
 matrix = None
@@ -29,6 +33,7 @@ def initMatrix() -> None:
     options.brightness = 60
 
     matrix = RGBMatrix(options=options)
+    matrix_output.put("Matrix initialized")
 
 def adjustBrightness(brightness: int) -> None:
     global matrix
@@ -39,7 +44,7 @@ def adjustBrightness(brightness: int) -> None:
 def playthe_video(path_to_video: str) -> None:
     global matrix
 
-    print(f"Starting video playback for: {path_to_video}")
+    matrix_output.put(f"Starting video playback for: {path_to_video}")
     
     offscreen = matrix.CreateFrameCanvas()
 
@@ -57,7 +62,7 @@ def playthe_video(path_to_video: str) -> None:
             "pipe:1",
         ]
     except subprocess.CalledProcessError as e:
-        print(f"Error executing ffmpeg command: {e}")
+        matrix_output.put(f"Error executing ffmpeg command: {e}")
         return
 
     process = subprocess.Popen(
@@ -98,6 +103,7 @@ def playthe_video(path_to_video: str) -> None:
             offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
+        matrix_output.put("Cleaning up FFmpeg and clearing matrix") # code to be changed to
         print("Cleaning up FFmpeg")
 
     
@@ -108,9 +114,14 @@ def playthe_video(path_to_video: str) -> None:
         print("Clearing matrix")
         matrix.Clear()
 
+def matrixHandlingThread():
+    while not stop_event.is_set():
+        try:
+            commands = send_command.get_nowait()
+    pass
+
 def start(path_to_video: str) -> threading.Thread:
-    print(f"Starting video playback thread for: {path_to_video}")
-    thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
+    thread = threading.Thread(target=matrixHandlingThread, daemon=False)
     thread.start()
     return thread
 

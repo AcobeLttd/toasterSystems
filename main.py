@@ -18,6 +18,14 @@ pastTime :float= 0
 
 print("Script started.")
 
+def matrixCheck() -> None:
+    try:
+        matrix_stat :str = matrixDisplay.matrix_output.get_nowait()
+        print(f"Matrix status: {matrix_stat}")
+        esp32serialMonitoring.writeSerial(f"Matrix status: {matrix_stat}")
+    except queue.Empty():
+        pass
+
 
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
@@ -66,6 +74,7 @@ def matrixFunctions(command :str, argument :str, *args :str):
         else:
             print(f"{command} not recognized as a command.")
             esp32serialMonitoring.writeSerial(f"{command} not recognized as a command for matrix.")
+            pass
 
 commands :dict = {
     "shutdown": shutdownPrint,
@@ -78,6 +87,7 @@ commands :dict = {
 try:
     while True: #Infinite loop, sort of like void loop
         try:
+            matrixCheck()
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
             parts = fromEsp.split("|")
 
@@ -93,8 +103,10 @@ try:
                             handler(*args)
                         except Exception as e:
                             print(f"Error executing command '{cmd}': {e}")
+                            esp32serialMonitoring.writeSerial(f"Error executing command '{cmd}': {e}")
                     else: 
                         print(f"No handler found for command '{cmd}'")
+                        esp32serialMonitoring.writeSerial(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
         currentTime :float= time.monotonic()
