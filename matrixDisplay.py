@@ -10,9 +10,6 @@ default_brightness :int=60
 
 matrix = None
 
-matrix_brightness : queue.Queue[int]= queue.Queue()
-matrix_brightness.put(default_brightness)
-
 
 
 
@@ -119,12 +116,6 @@ def playthe_video(path_to_video: str) -> None:
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
             display_on_both(frame)
-
-            try:
-                bright = matrix_brightness.get_nowait()
-                adjustBrightness(bright)
-            except queue.Empty:
-                pass
 
  
     finally:
