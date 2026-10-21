@@ -69,7 +69,7 @@ def matrixBrightness(brightness :str) -> None:
 def matrixFunctions(command :str, argument :str, *args :str):
     if command == "play":
         playMatrixVideo(argument)        
-    elif command == ("brightness" or "br"):
+    elif command in ("brightness", "br"):
         matrixBrightness(argument)
     else:
         print(f"{command} not recognized as a command.")
@@ -123,6 +123,8 @@ except KeyboardInterrupt:
 finally:
     print("byteyyrtrey")
     esp32serialMonitoring.stop_event.set()
-    matrixDisplay.stop_event.set()
+    matrixDisplay.stop_matrix.set()
+    matrixVideo.stop_event.set()
     serial_thread.join(timeout=3)
+    matrix_thread.join(timeout=3)
     matrix_thread.join(timeout=3)
