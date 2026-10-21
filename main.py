@@ -14,6 +14,8 @@ matrixDisplay.initMatrix()
 
 matrix_thread = matrixDisplay.start()
 
+decoder_thread = None
+
 currentTime :float= time.monotonic()
 pastTime :float= 0
 
@@ -43,7 +45,6 @@ def shutdownPrint() -> None:
     pass
 
 def playMatrixVideo(path_to_video :str) -> None:    
-    global matrix_thread
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
