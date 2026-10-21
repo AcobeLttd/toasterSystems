@@ -54,7 +54,7 @@ def serialReading() -> None:
         print("Serial started at 115200 baud rate.")
         while not stop_event.is_set(): 
             try:
-                message :str = serial_to_send.get_nowait()
+                message :str = serial_to_send.get(timeout=0.01)
                 print("Trying to write serial: ", message)
                 ser.write((message + "\n").encode("utf-8"))
             except queue.Empty:
