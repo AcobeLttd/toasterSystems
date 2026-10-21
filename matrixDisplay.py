@@ -51,38 +51,26 @@ def displayMatrix() -> None:
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
-    try:
-        while not stop_video.is_set():
-            try:
-                frame = matrixVideo.frame_quene.get_nowait()
-            except queue.Empty:
-                frame = Image.new("RGB", (128, 32), (0, 0, 0))
-                pass
+    while not stop_video.is_set():
+        try:
+            frame = matrixVideo.frame_quene.get_nowait()
+        except queue.Empty:
+            frame = Image.new("RGB", (128, 32), (0, 0, 0))
+            pass
 
-            display_image.paste(frame, (0, 0))
+        display_image.paste(frame, (0, 0))
 
-            try:
-                bright = matrix_brightness.get_nowait()
-                adjustBrightness(bright)
-            except queue.Empty:
-                pass
+        try:
+            bright = matrix_brightness.get_nowait()
+            adjustBrightness(bright)
+        except queue.Empty:
+            pass
 
-            mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-            display_image.paste(mirrored, (64, 0))
+        mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        display_image.paste(mirrored, (64, 0))
 
-            offscreen.SetImage(display_image)
-            offscreen = matrix.SwapOnVSync(offscreen)
- 
-    finally:
-        matrix_output.put("Cleaning up FFmpeg and clearing matrix") # code to be changed to have it fade to something else or black before fading in another animation. To be determined.
-        print("Cleaning up FFmpeg")
-
-    
-        print("Force killing FFmpeg")
-        process.kill()
-        process.wait()
-
-        print("Clearing matrix")
+        offscreen.SetImage(display_image)
+        offscreen = matrix.SwapOnVSync(offscreen)
 
 
 def stop():
@@ -90,7 +78,7 @@ def stop():
 
 
 commands :dict = {
-    "play": playthe_video,
+    "play": matrixVideo.playthe_video,
 }
 
 
@@ -119,6 +107,7 @@ def matrixHandlingThread():
 
         except queue.Empty:
             pass
+        displayMatrix()
 
 
 
