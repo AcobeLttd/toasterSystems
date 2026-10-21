@@ -19,7 +19,7 @@ FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
 
-def start_up():
+def default():
     global matrix
     image = Image.open("./test-media/blåhaj.png").convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
@@ -45,7 +45,7 @@ def initMatrix() -> None:
     
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
     
-    start_up()
+    default()
 
 
 def adjustBrightness(brightness: int) -> None:
@@ -131,8 +131,8 @@ def playthe_video(path_to_video: str) -> None:
         process.kill()
         process.wait()
 
-        print("Clearing matrix")
-        matrix.Clear()
+        print("Defaulting")
+        default()
 
 def start(path_to_video: str) -> threading.Thread:
     print(f"Starting video playback thread for: {path_to_video}")
