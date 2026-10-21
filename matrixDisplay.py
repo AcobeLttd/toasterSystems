@@ -55,7 +55,6 @@ def displayMatrix() -> None:
         try:
             frame = matrixVideo.frame_queue.get_nowait()
         except queue.Empty:
-            frame = Image.new("RGB", (64, 32), (0, 0, 0))
             pass
 
         display_image.paste(frame, (0, 0))
@@ -79,10 +78,6 @@ def stop_video() -> None:
 def stop() -> None:
     stop_matrix.set()
 
-
-commands :dict = {
-    "play": matrixVideo.playthe_video,
-}
 
 
 

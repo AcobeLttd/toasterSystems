@@ -2,6 +2,7 @@ import queue
 import time
 import esp32serialMonitoring
 import matrixDisplay
+import matrixVideo
 import os
 
 g: int= 0
@@ -25,6 +26,12 @@ def matrixCheck() -> None:
         esp32serialMonitoring.writeSerial(f"Matrix status: {matrix_stat}")
     except queue.Empty:
         pass
+    try:
+        matrix_decode :str = matrixVideo.video_debug_output.get_nowait()
+        print(f"Decoder info: {matrix_decode}")
+        esp32serialMonitoring.writeSerial(f"Matrix decode: {matrix_decode}")
+    except queue.Empty:
+        pass
 
 
 def shutdownPrint() -> None:
@@ -40,7 +47,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
-        matrixDisplay.stop_video()
+        matrixVideo.stop_event.set()
         return
     
     print(f"Playing video: {path_to_video}")
@@ -48,7 +55,8 @@ def playMatrixVideo(path_to_video :str) -> None:
     try:
 
         matrixDisplay.stop_matrix.clear()
-        matrixDisplay.send_command.put(f"play|{path_to_video}")
+        matrixVideo.stop_event.clear()
+        matrixVideo.decode(path_to_video)
 
     except Exception as e:
         
