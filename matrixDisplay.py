@@ -4,7 +4,6 @@ import matrixVideo
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-stop_event = threading.Event()
 
 stop_matrix = threading.Event()
 
@@ -56,7 +55,7 @@ def displayMatrix() -> None:
         try:
             frame = matrixVideo.frame_queue.get_nowait()
         except queue.Empty:
-            frame = Image.new("RGB", (128, 32), (0, 0, 0))
+            frame = Image.new("RGB", (64, 32), (0, 0, 0))
             pass
 
         display_image.paste(frame, (0, 0))
@@ -73,8 +72,11 @@ def displayMatrix() -> None:
         offscreen.SetImage(display_image)
         offscreen = matrix.SwapOnVSync(offscreen)
 
+def stop_video() -> None:
+    matrixVideo.stop_event.set()
 
-def stop():
+
+def stop() -> None:
     stop_matrix.set()
 
 
@@ -83,38 +85,9 @@ commands :dict = {
 }
 
 
-def matrixHandlingThread():
-    print("heyo!")
-    while not stop_event.is_set():
-        displayMatrix()
-        try:
-            
-            fromMain:str = send_command.get_nowait() 
-            parts = fromMain.split("|")
-
-            cmd = parts[0]
-            args = parts[1:]
-
-            if cmd:
-                handler :callable = commands.get(cmd)
-                if handler is not None:
-                    try:
-                        handler(*args)
-                    except Exception as e:
-                       
-                        matrix_output.put(f"Error executing command '{cmd}': {e}")
-
-                else: 
-                        
-                    matrix_output.put(f"No handler found for command '{cmd}'")
-
-        except queue.Empty:
-            pass
-
-
 
 def start() -> threading.Thread:
-    thread = threading.Thread(target=matrixHandlingThread, daemon=False)
+    thread = threading.Thread(target=displayMatrix, daemon=False)
     thread.start()
     return thread
 

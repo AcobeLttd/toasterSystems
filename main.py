@@ -40,7 +40,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
-        matrixDisplay.stop()
+        matrixDisplay.stop_video()
         return
     
     print(f"Playing video: {path_to_video}")
@@ -59,15 +59,14 @@ def matrixBrightness(brightness :str) -> None:
     matrixDisplay.matrix_brightness.put(int(brightness))
 
 def matrixFunctions(command :str, argument :str, *args :str):
-    if args is not None:
-        if command == "play":
-            playMatrixVideo(argument)        
-        elif command == ("brightness" or "br"):
-            matrixBrightness(argument)
-        else:
-            print(f"{command} not recognized as a command.")
-            esp32serialMonitoring.writeSerial(f"{command} not recognized as a command for matrix.")
-            pass
+    if command == "play":
+        playMatrixVideo(argument)        
+    elif command == ("brightness" or "br"):
+        matrixBrightness(argument)
+    else:
+        print(f"{command} not recognized as a command.")
+        esp32serialMonitoring.writeSerial(f"{command} not recognized as a command for matrix.")
+        pass
 
 commands :dict = {
     "shutdown": shutdownPrint,

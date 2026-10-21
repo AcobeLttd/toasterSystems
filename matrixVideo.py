@@ -1,10 +1,13 @@
 import subprocess
+import threading
 import queue
 from PIL import Image
 
 frame_queue  = queue.Queue(maxsize=1)
 
 video_debug_output :queue.Queue[str] = queue.Queue()
+
+stop_event = threading.Event
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
@@ -36,7 +39,7 @@ def playthe_video(path_to_video: str) -> None:
 
 
     try:
-        while True:
+        while not stop_event.is_set():
 
             data = bytearray()
 
@@ -50,7 +53,6 @@ def playthe_video(path_to_video: str) -> None:
                 break
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-            frame_queue.put(frame)
             try:
                 frame_queue.put_nowait(frame)
             except queue.Full:
@@ -70,3 +72,8 @@ def playthe_video(path_to_video: str) -> None:
         print("Force killing FFmpeg")
         process.kill()
         process.wait()
+
+def decode(arg) -> threading.Thread:
+    thread = threading.Thread(target=playthe_video,args=arg daemon=False)
+    thread.start()
+    return thread
