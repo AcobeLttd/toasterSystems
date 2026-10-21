@@ -63,6 +63,7 @@ def serialReading() -> None:
                 msg :str = ser.readline().decode(
                     "utf-8", errors="replace"
                 ).strip()
+                print(f"{time.monotonic():.3f} Serial received: {msg}")
                 
                 if msg == "ping":
                     sendPong()

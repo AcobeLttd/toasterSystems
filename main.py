@@ -51,7 +51,7 @@ def playMatrixVideo(path_to_video :str) -> None:
         matrixVideo.stop_event.set()
         return
     
-    print(f"Playing video: {path_to_video}")
+    print(f"{time.monotonic():.3f} Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
 
@@ -90,6 +90,7 @@ try:
         try:
             matrixCheck()
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
+            print(f"{time.monotonic():.3f} Main received: {fromEsp}")
             parts = fromEsp.split("|")
 
             cmd = parts[0]
