@@ -30,6 +30,8 @@ def start_up():
 
 def initMatrix() -> None:
     global matrix
+    global offscreen
+    global display_image
 
     options = RGBMatrixOptions()
     options.rows = 32
@@ -40,6 +42,10 @@ def initMatrix() -> None:
     options.brightness = 60
 
     matrix = RGBMatrix(options=options)
+    offscreen = matrix.CreateFrameCanvas()
+    
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+    
     start_up()
 
 
@@ -92,10 +98,7 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     
-    offscreen = matrix.CreateFrameCanvas()
-
-    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-
+    
     ffmpeg_decode(path_to_video)
 
 
