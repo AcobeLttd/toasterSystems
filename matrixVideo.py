@@ -74,6 +74,6 @@ def playthe_video(path_to_video: str) -> None:
         process.wait()
 
 def decode(arg) -> threading.Thread:
-    thread = threading.Thread(target=playthe_video,args=arg daemon=False)
+    thread = threading.Thread(target=playthe_video, args=arg, daemon=False)
     thread.start()
     return thread
