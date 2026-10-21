@@ -103,7 +103,7 @@ def playthe_video(path_to_video: str) -> None:
             offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
-        matrix_output.put("Cleaning up FFmpeg and clearing matrix") # code to be changed to
+        matrix_output.put("Cleaning up FFmpeg and clearing matrix") # code to be changed to have it fade to something else or black before fading in another animation. To be determined.
         print("Cleaning up FFmpeg")
 
     
@@ -114,13 +114,45 @@ def playthe_video(path_to_video: str) -> None:
         print("Clearing matrix")
         matrix.Clear()
 
+
+def stop():
+    stop_event.set()
+
+
+commands :dict = {
+    "play": playthe_video,
+}
+
+
 def matrixHandlingThread():
     while not stop_event.is_set():
         try:
-            commands = send_command.get_nowait()
-    pass
+            
+            fromMain:str = send_command.get_nowait() 
+            parts = cmd.split("|")
 
-def start(path_to_video: str) -> threading.Thread:
+            cmd = parts[0]
+            args = parts[1:]
+
+            if cmd:
+                handler :callable = commands.get(cmd)
+                if handler is not None:
+                    try:
+                        handler(*args)
+                    except Exception as e:
+                       
+                        matrix_output.put(f"Error executing command '{cmd}': {e}")
+
+                    else: 
+                        
+                        matrix_output.put(f"No handler found for command '{cmd}'")
+
+        except queue.Empty:
+            pass
+
+
+
+def start() -> threading.Thread:
     thread = threading.Thread(target=matrixHandlingThread, daemon=False)
     thread.start()
     return thread

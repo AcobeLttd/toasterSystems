@@ -11,7 +11,7 @@ serial_thread = esp32serialMonitoring.start()
 
 matrixDisplay.initMatrix()
 
-matrix_thread = None
+matrix_thread = matrixDisplay.start()
 
 currentTime :float= time.monotonic()
 pastTime :float= 0
@@ -41,7 +41,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
-        matrixDisplay.stop_event.set()
+        matrixDisplay.stop()
         if matrix_thread is not None:
             matrix_thread.join(timeout=3)
 
@@ -56,9 +56,12 @@ def playMatrixVideo(path_to_video :str) -> None:
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
-        matrix_thread = matrixDisplay.start(path_to_video)
+        
         matrixDisplay.stop_event.clear()
+        matrixDisplay.send_command.put(f"play|{path_to_video}")
+
     except Exception as e:
+        
         print(f"Error playing video '{path_to_video}': {e}")
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
 
@@ -85,7 +88,7 @@ commands :dict = {
 
 
 try:
-    while True: #Infinite loop, sort of like void loop
+    while True: 
         try:
             matrixCheck()
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
