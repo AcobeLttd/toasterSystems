@@ -76,12 +76,8 @@ def displayMatrix() -> None:
 def stop_video() -> None:
     matrixVideo.stop_event.set()
 
-
 def stop() -> None:
     stop_matrix.set()
-
-
-
 
 def start() -> threading.Thread:
     thread = threading.Thread(target=displayMatrix, daemon=False)
