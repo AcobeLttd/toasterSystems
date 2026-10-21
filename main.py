@@ -1,7 +1,7 @@
 import queue
 import time
 import esp32serialMonitoring
-import matrixVideoPlayback
+import matrixDisplay
 import os
 
 g: int= 0
@@ -9,7 +9,7 @@ g: int= 0
 
 serial_thread = esp32serialMonitoring.start()
 
-matrixVideoPlayback.initMatrix()
+matrixDisplay.initMatrix()
 
 matrix_thread = None
 
@@ -21,7 +21,7 @@ print("Script started.")
 
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
-    matrixVideoPlayback.stop_event.set()
+    matrixDisplay.stop_event.set()
     time.sleep(20)
     print("Python effective UID:", os.geteuid())
     print("Shutting down, bye bye!")
@@ -33,7 +33,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     if path_to_video == "stop":
         print("Stopping video playback.")
         esp32serialMonitoring.writeSerial("Stopping video playback.")
-        matrixVideoPlayback.stop_event.set()
+        matrixDisplay.stop_event.set()
         if matrix_thread is not None:
             matrix_thread.join(timeout=3)
 
@@ -48,14 +48,14 @@ def playMatrixVideo(path_to_video :str) -> None:
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
-        matrix_thread = matrixVideoPlayback.start(path_to_video)
-        matrixVideoPlayback.stop_event.clear()
+        matrix_thread = matrixDisplay.start(path_to_video)
+        matrixDisplay.stop_event.clear()
     except Exception as e:
         print(f"Error playing video '{path_to_video}': {e}")
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
 
 def matrixBrightness(brightness :str) -> None:
-    matrixVideoPlayback.matrix_brightness.put(int(brightness))
+    matrixDisplay.matrix_brightness.put(int(brightness))
 
 def matrixFunctions(command :str, argument :str, *args :str):
     if args is not None:
@@ -111,5 +111,5 @@ except KeyboardInterrupt:
 finally:
     print("byteyyrtrey")
     esp32serialMonitoring.stop_event.set()
-    matrixVideoPlayback.stop_event.set()
+    matrixDisplay.stop_event.set()
     serial_thread.join(timeout=3)
