@@ -129,7 +129,7 @@ def matrixHandlingThread():
         try:
             
             fromMain:str = send_command.get_nowait() 
-            parts = cmd.split("|")
+            parts = fromMain.split("|")
 
             cmd = parts[0]
             args = parts[1:]
