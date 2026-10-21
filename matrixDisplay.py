@@ -45,7 +45,7 @@ def adjustBrightness(brightness: int) -> None:
 
 def displayMatrix() -> None:
     global matrix
-    matrix.clear()
+    matrix.Clear()
     
     offscreen = matrix.CreateFrameCanvas()
 
