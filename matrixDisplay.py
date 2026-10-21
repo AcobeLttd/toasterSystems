@@ -11,9 +11,6 @@ send_command :queue.Queue[str] = queue.Queue()
 
 matrix_output :queue.Queue[str] = queue.Queue()
 
-frame = queue.Queue()
-frame.put(Image.new("RGB", (128, 32), (0, 0, 0)))
-
 default_brightness :int=60
 
 matrix = None
@@ -52,7 +49,7 @@ def displayMatrix() -> None:
     
     offscreen = matrix.CreateFrameCanvas()
 
-    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+    frame = Image.new("RGB", (64, 32), (0, 0, 0))
 
     while not stop_matrix.is_set():
         try:
