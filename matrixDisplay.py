@@ -10,6 +10,7 @@ default_brightness :int=60
 
 matrix = None
 
+current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
 
 
 
@@ -52,6 +53,7 @@ def adjustBrightness(brightness: int) -> None:
     brightness = max(0, min(100, brightness))
     print(f"recieved in matrix code {brightness}")
     matrix.brightness = brightness
+    display_on_both(current_frame)
 
 def ffmpeg_decode(path_to_video: str):
     global process
@@ -80,12 +82,15 @@ def ffmpeg_decode(path_to_video: str):
 def display_on_both(frames :Image.Image):
     global offscreen
     global display_image
+    global current_frame
     
     display_image.paste(frames, (0, 0))
     mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
     display_image.paste(mirrored, (64, 0))
+
+    current_frame = display_image
     
-    offscreen.SetImage(display_image)
+    offscreen.SetImage(current_frame)
     offscreen = matrix.SwapOnVSync(offscreen)
 
 
