@@ -60,7 +60,7 @@ def matrixBrightness(brightness :str) -> None:
     except Exception as e:
         print(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
         esp32serialMonitoring.writeSerial(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
-    matrixDisplay.adjustBrightness(brightness)
+    matrixDisplay.adjustBrightness(int_bright)
 
 def matrixFunctions(command :str, argument :str, *args :str):
     if args is not None:
