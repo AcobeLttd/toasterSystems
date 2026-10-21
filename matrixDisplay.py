@@ -6,6 +6,8 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
+stop_video = threading.Event()
+
 send_command :queue.Queue[str] = queue.Queue()
 
 matrix_output :queue.Queue[str] = queue.Queue()
@@ -73,7 +75,7 @@ def playthe_video(path_to_video: str) -> None:
 
 
     try:
-        while not stop_event.is_set():
+        while not stop_video.is_set():
 
             data = bytearray()
 
@@ -116,7 +118,7 @@ def playthe_video(path_to_video: str) -> None:
 
 
 def stop():
-    stop_event.set()
+    stop_video.set()
 
 
 commands :dict = {
