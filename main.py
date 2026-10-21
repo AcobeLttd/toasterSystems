@@ -29,7 +29,6 @@ def matrixCheck() -> None:
 
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
-    matrixDisplay.stop_event.set()
     time.sleep(20)
     print("Python effective UID:", os.geteuid())
     print("Shutting down, bye bye!")
@@ -57,7 +56,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
 
-        matrixDisplay.stop_event.clear()
+        matrixDisplay.stop_video.clear()
         matrixDisplay.send_command.put(f"play|{path_to_video}")
 
     except Exception as e:
