@@ -57,6 +57,7 @@ def playMatrixVideo(path_to_video :str) -> None:
 def matrixBrightness(brightness :str) -> None:
     try:
         int_bright = int(brightness)
+        print(f"converting to int value{int_bright}")
     except ValueError as e:
         print(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
         esp32serialMonitoring.writeSerial(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
