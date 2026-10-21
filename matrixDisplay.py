@@ -49,6 +49,8 @@ def displayMatrix() -> None:
     
     offscreen = matrix.CreateFrameCanvas()
 
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+
     frame = Image.new("RGB", (64, 32), (0, 0, 0))
 
     while not stop_matrix.is_set():
