@@ -11,6 +11,7 @@ FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
 def playthe_video(path_to_video: str) -> None:
+    print(does it get here?)
     try:
         cmd = [
             "ffmpeg",

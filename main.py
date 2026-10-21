@@ -47,7 +47,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
 
-        matrixDisplay.stop_video.clear()
+        matrixDisplay.stop_matrix.clear()
         matrixDisplay.send_command.put(f"play|{path_to_video}")
 
     except Exception as e:

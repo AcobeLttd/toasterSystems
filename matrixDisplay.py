@@ -6,7 +6,7 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
-stop_video = threading.Event()
+stop_matrix = threading.Event()
 
 send_command :queue.Queue[str] = queue.Queue()
 
@@ -44,6 +44,7 @@ def adjustBrightness(brightness: int) -> None:
 
 
 def displayMatrix() -> None:
+    print("Does it get to display matrix?")
     global matrix
     matrix.Clear()
     
@@ -51,7 +52,7 @@ def displayMatrix() -> None:
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
-    while not stop_video.is_set():
+    while not stop_matrix.is_set():
         try:
             frame = matrixVideo.frame_quene.get_nowait()
         except queue.Empty:
@@ -74,7 +75,7 @@ def displayMatrix() -> None:
 
 
 def stop():
-    stop_video.set()
+    stop_matrix.set()
 
 
 commands :dict = {
