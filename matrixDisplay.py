@@ -13,6 +13,19 @@ matrix = None
 matrix_brightness : queue.Queue[int]= queue.Queue()
 matrix_brightness.put(default_brightness)
 
+
+cmd = [
+                "ffmpeg",
+                "-hide_banner", "-loglevel", "error",
+                "-re",
+                "-i", path_to_video,
+                "-an",
+                "-vf", "scale=64:32:flags=bicubic,fps=60",
+                "-pix_fmt", "rgb24",
+                "-f", "rawvideo",
+                "pipe:1",
+            ]
+
 WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
@@ -35,36 +48,34 @@ def adjustBrightness(brightness: int) -> None:
     brightness = max(0, min(100, brightness))
     matrix.brightness = brightness
 
+def ffmpeg_decode():
+    global process
+    global cmd
+    try:
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            bufsize=FRAME_SIZE * 6,
+        )
+            
+    except subprocess.CalledProcessError as e:
+            print(f"Error executing ffmpeg command: {e}")
+            return
+    
+   
+
 
 def playthe_video(path_to_video: str) -> None:
     global matrix
+    global process
 
     print(f"Starting video playback for: {path_to_video}")
     
     offscreen = matrix.CreateFrameCanvas()
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-    try:
-        cmd = [
-            "ffmpeg",
-            "-hide_banner", "-loglevel", "error",
-            "-re",
-            "-i", path_to_video,
-            "-an",
-            "-vf", "scale=64:32:flags=bicubic,fps=60",
-            "-pix_fmt", "rgb24",
-            "-f", "rawvideo",
-            "pipe:1",
-        ]
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing ffmpeg command: {e}")
-        return
 
-    process = subprocess.Popen(
-        cmd,
-        stdout=subprocess.PIPE,
-        bufsize=FRAME_SIZE * 6,
-    )
+    ffmpeg_decode()
 
 
     try:

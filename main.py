@@ -61,7 +61,7 @@ def matrixFunctions(command :str, argument :str, *args :str):
     if args is not None:
         if command == "play":
             playMatrixVideo(argument)        
-        elif command == "brightness" or "br":
+        elif command in ("brightness", "br"):
             matrixBrightness(argument)
         else:
             print(f"{command} not recognized as a command.")
