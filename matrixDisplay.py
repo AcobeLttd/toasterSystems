@@ -143,9 +143,9 @@ def matrixHandlingThread():
                        
                         matrix_output.put(f"Error executing command '{cmd}': {e}")
 
-                    else: 
+                else: 
                         
-                        matrix_output.put(f"No handler found for command '{cmd}'")
+                    matrix_output.put(f"No handler found for command '{cmd}'")
 
         except queue.Empty:
             pass

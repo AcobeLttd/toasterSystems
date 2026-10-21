@@ -56,7 +56,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
     try:
-        
+
         matrixDisplay.stop_event.clear()
         matrixDisplay.send_command.put(f"play|{path_to_video}")
 
@@ -128,3 +128,4 @@ finally:
     esp32serialMonitoring.stop_event.set()
     matrixDisplay.stop_event.set()
     serial_thread.join(timeout=3)
+    matrix_thread.join(timeout=3)
