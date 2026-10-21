@@ -1,6 +1,6 @@
-import subprocess
 import threading
 import queue
+import matrixVideo
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -43,52 +43,21 @@ def adjustBrightness(brightness: int) -> None:
     matrix.brightness = brightness
 
 
-def playthe_video(path_to_video: str) -> None:
+def displayMatrix() -> None:
     global matrix
-
-    matrix_output.put(f"Starting video playback for: {path_to_video}")
+    matrix.clear()
     
     offscreen = matrix.CreateFrameCanvas()
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-    try:
-        cmd = [
-            "ffmpeg",
-            "-hide_banner", "-loglevel", "error",
-            "-re",
-            "-i", path_to_video,
-            "-an",
-            "-vf", "scale=64:32:flags=bicubic,fps=60",
-            "-pix_fmt", "rgb24",
-            "-f", "rawvideo",
-            "pipe:1",
-        ]
-    except subprocess.CalledProcessError as e:
-        matrix_output.put(f"Error executing ffmpeg command: {e}")
-        return
-
-    process = subprocess.Popen(
-        cmd,
-        stdout=subprocess.PIPE,
-        bufsize=FRAME_SIZE * 6,
-    )
-
 
     try:
         while not stop_video.is_set():
-
-            data = bytearray()
-
-            while len(data) < FRAME_SIZE:
-                chunk = process.stdout.read(FRAME_SIZE - len(data))
-                if not chunk:
-                    break
-                data.extend(chunk)
-
-            if len(data) != FRAME_SIZE:
-                break
-
-            frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
+            try:
+                frame = matrixVideo.frame_quene.get_nowait()
+            except queue.Empty:
+                frame = Image.new("RGB", (128, 32), (0, 0, 0))
+                pass
 
             display_image.paste(frame, (0, 0))
 
