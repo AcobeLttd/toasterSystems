@@ -90,4 +90,5 @@ def start() -> threading.Thread:
 
 if __name__ == "__main__":
     video_path = "./test-media/theAppleThatIsBad.mp4"
-    start(video_path)
+    start()
+    matrixVideo.decode(video_path)
