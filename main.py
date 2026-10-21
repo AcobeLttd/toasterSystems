@@ -12,7 +12,7 @@ serial_thread = esp32serialMonitoring.start()
 
 matrixDisplay.initMatrix()
 
-matrix_thread = matrixDisplay.start()
+#matrix_thread = matrixDisplay.start()
 
 decoder_thread = None
 
