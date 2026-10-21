@@ -22,7 +22,7 @@ print("Script started.")
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
     matrixDisplay.shutdown()
-    time.sleep(5)
+    time.sleep(10)
     print("Python effective UID:", os.geteuid())
     print("Shutting down, bye bye!")
     currentTime :float= time.monotonic()
