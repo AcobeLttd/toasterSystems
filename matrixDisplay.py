@@ -53,7 +53,7 @@ def adjustBrightness(brightness: int) -> None:
     brightness = max(0, min(100, brightness))
     print(f"recieved in matrix code {brightness}")
     matrix.brightness = brightness
-    display_on_both(curr)
+    display_on_both(current_frame)
 
 def ffmpeg_decode(path_to_video: str):
     global process
