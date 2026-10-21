@@ -84,7 +84,9 @@ commands :dict = {
 
 
 def matrixHandlingThread():
+    print("heyo!")
     while not stop_event.is_set():
+        displayMatrix()
         try:
             
             fromMain:str = send_command.get_nowait() 
@@ -108,7 +110,6 @@ def matrixHandlingThread():
 
         except queue.Empty:
             pass
-        displayMatrix()
 
 
 
