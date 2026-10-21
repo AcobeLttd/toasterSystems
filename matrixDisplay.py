@@ -21,7 +21,6 @@ FRAME_SIZE = WIDTH * HEIGHT * 3
 def shutdown():
     stop_event.set()
     global matrix
-    matrix.Clear()
     image = Image.open("./test-media/horrifying.png").convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
     image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
