@@ -11,6 +11,8 @@ send_command :queue.Queue[str] = queue.Queue()
 
 matrix_output :queue.Queue[str] = queue.Queue()
 
+frame = queue.Queue()
+
 default_brightness :int=60
 
 matrix = None
