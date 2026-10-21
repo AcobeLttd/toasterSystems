@@ -2,7 +2,7 @@ import subprocess
 import queue
 from PIL import Image
 
-frame_quene  = queue.Queue(maxsize=1)
+frame_queue  = queue.Queue(maxsize=1)
 
 video_debug_output :queue.Queue[str] = queue.Queue()
 
@@ -50,7 +50,7 @@ def playthe_video(path_to_video: str) -> None:
                 break
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-            frame_quene.put(frame)
+            frame_queue.put(frame)
             try:
                 frame_queue.put_nowait(frame)
             except queue.Full:
