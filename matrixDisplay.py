@@ -14,17 +14,7 @@ matrix_brightness : queue.Queue[int]= queue.Queue()
 matrix_brightness.put(default_brightness)
 
 
-cmd = [
-                "ffmpeg",
-                "-hide_banner", "-loglevel", "error",
-                "-re",
-                "-i", path_to_video,
-                "-an",
-                "-vf", "scale=64:32:flags=bicubic,fps=60",
-                "-pix_fmt", "rgb24",
-                "-f", "rawvideo",
-                "pipe:1",
-            ]
+
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
@@ -48,9 +38,19 @@ def adjustBrightness(brightness: int) -> None:
     brightness = max(0, min(100, brightness))
     matrix.brightness = brightness
 
-def ffmpeg_decode():
+def ffmpeg_decode(path_to_video: str):
     global process
-    global cmd
+    cmd = [
+        "ffmpeg",
+        "-hide_banner", "-loglevel", "error",
+        "-re",
+        "-i", path_to_video,
+        "-an",
+        "-vf", "scale=64:32:flags=bicubic,fps=60",
+        "-pix_fmt", "rgb24",
+        "-f", "rawvideo",
+        "pipe:1",
+    ]
     try:
         process = subprocess.Popen(
             cmd,
@@ -75,7 +75,7 @@ def playthe_video(path_to_video: str) -> None:
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
 
-    ffmpeg_decode()
+    ffmpeg_decode(path_to_video)
 
 
     try:
