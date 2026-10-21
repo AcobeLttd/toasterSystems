@@ -21,7 +21,7 @@ pastTime :float= 0
 def shutdown() -> None:
     try:
         ser.write(b"Shutdown Recieved\n")
-        time.sleep(20)
+        time.sleep(5)
         ser.write(b"Shutting down\n")
         print("Python effective UID:", os.geteuid())
         subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
