@@ -20,6 +20,14 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
+
+def start_up():
+    global matrix
+    image = Image.open("./test-media/blåhaj.png").convert("RGB")
+    image = image.resize((64, 32), Image.Resampling.BICUBIC)
+
+    display_on_both(image)
+
 def initMatrix() -> None:
     global matrix
 
@@ -32,6 +40,8 @@ def initMatrix() -> None:
     options.brightness = 60
 
     matrix = RGBMatrix(options=options)
+    start_up()
+
 
 def adjustBrightness(brightness: int) -> None:
     global matrix
@@ -62,7 +72,7 @@ def ffmpeg_decode(path_to_video: str):
             print(f"Error executing ffmpeg command: {e}")
             return
     
-def display_on_both(frames):
+def display_on_both(frames :Image.Image):
     global offscreen
     global display_image
     
@@ -106,19 +116,12 @@ def playthe_video(path_to_video: str) -> None:
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
             display_on_both(frame)
 
-            #display_image.paste(frame, (0, 0))
-
             try:
                 bright = matrix_brightness.get_nowait()
                 adjustBrightness(bright)
             except queue.Empty:
                 pass
 
-            #mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-            #display_image.paste(mirrored, (64, 0))
-
-            #offscreen.SetImage(display_image)
-            #offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
         print("Cleaning up FFmpeg")
