@@ -85,6 +85,7 @@ def start() -> threading.Thread:
     return thread
 
 if __name__ == "__main__":
+    initMatrix()
     video_path = "./test-media/theAppleThatIsBad.mp4"
     start()
     matrixVideo.decode(video_path)
