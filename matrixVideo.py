@@ -5,6 +5,7 @@ from PIL import Image
 
 frame_queue  = queue.Queue(maxsize=1)
 
+
 video_debug_output :queue.Queue[str] = queue.Queue()
 
 stop_event = threading.Event()
