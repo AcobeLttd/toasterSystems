@@ -31,7 +31,7 @@ def shutdown() -> None:
 def sendPong() -> None:
     print("From ESP32: Recieved ping \nSending pong.")
     try:
-        ser.write(b"pong\n")
+        serial_to_send.put("pong")
     except Exception as e:
         print(f"Error sending pong: {e}")
 
