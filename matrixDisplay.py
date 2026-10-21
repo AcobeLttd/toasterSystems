@@ -54,7 +54,7 @@ def displayMatrix() -> None:
 
     while not stop_matrix.is_set():
         try:
-            frame = matrixVideo.frame_quene.get_nowait()
+            frame = matrixVideo.frame_queue.get_nowait()
         except queue.Empty:
             frame = Image.new("RGB", (128, 32), (0, 0, 0))
             pass
