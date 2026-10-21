@@ -1,15 +1,10 @@
+import subprocess
 import threading
 import queue
-import matrixVideo
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
-
-stop_matrix = threading.Event()
-
-send_command :queue.Queue[str] = queue.Queue()
-
-matrix_output :queue.Queue[str] = queue.Queue()
+stop_event = threading.Event()
 
 default_brightness :int=60
 
@@ -34,7 +29,6 @@ def initMatrix() -> None:
     options.brightness = 60
 
     matrix = RGBMatrix(options=options)
-    matrix_output.put("Matrix initialized")
 
 def adjustBrightness(brightness: int) -> None:
     global matrix
@@ -42,50 +36,84 @@ def adjustBrightness(brightness: int) -> None:
     matrix.brightness = brightness
 
 
-def displayMatrix() -> None:
-    print("Does it get to display matrix?")
+def playthe_video(path_to_video: str) -> None:
     global matrix
-    matrix.Clear()
+
+    print(f"Starting video playback for: {path_to_video}")
     
     offscreen = matrix.CreateFrameCanvas()
 
     display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+    try:
+        cmd = [
+            "ffmpeg",
+            "-hide_banner", "-loglevel", "error",
+            "-re",
+            "-i", path_to_video,
+            "-an",
+            "-vf", "scale=64:32:flags=bicubic,fps=60",
+            "-pix_fmt", "rgb24",
+            "-f", "rawvideo",
+            "pipe:1",
+        ]
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing ffmpeg command: {e}")
+        return
 
-    frame = Image.new("RGB", (64, 32), (0, 0, 0))
+    process = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        bufsize=FRAME_SIZE * 6,
+    )
 
-    while not stop_matrix.is_set():
-        try:
-            frame = matrixVideo.frame_queue.get_nowait()
-        except queue.Empty:
-            pass
 
-        display_image.paste(frame, (0, 0))
+    try:
+        while not stop_event.is_set():
 
-        try:
-            bright = matrix_brightness.get_nowait()
-            adjustBrightness(bright)
-        except queue.Empty:
-            pass
+            data = bytearray()
 
-        mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        display_image.paste(mirrored, (64, 0))
+            while len(data) < FRAME_SIZE:
+                chunk = process.stdout.read(FRAME_SIZE - len(data))
+                if not chunk:
+                    break
+                data.extend(chunk)
 
-        offscreen.SetImage(display_image)
-        offscreen = matrix.SwapOnVSync(offscreen)
+            if len(data) != FRAME_SIZE:
+                break
 
-def stop_video() -> None:
-    matrixVideo.stop_event.set()
+            frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
 
-def stop() -> None:
-    stop_matrix.set()
+            display_image.paste(frame, (0, 0))
 
-def start() -> threading.Thread:
-    thread = threading.Thread(target=displayMatrix, daemon=False)
+            try:
+                bright = matrix_brightness.get_nowait()
+                adjustBrightness(bright)
+            except queue.Empty:
+                pass
+
+            mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            display_image.paste(mirrored, (64, 0))
+
+            offscreen.SetImage(display_image)
+            offscreen = matrix.SwapOnVSync(offscreen)
+ 
+    finally:
+        print("Cleaning up FFmpeg")
+
+    
+        print("Force killing FFmpeg")
+        process.kill()
+        process.wait()
+
+        print("Clearing matrix")
+        matrix.Clear()
+
+def start(path_to_video: str) -> threading.Thread:
+    print(f"Starting video playback thread for: {path_to_video}")
+    thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
     return thread
 
 if __name__ == "__main__":
-    initMatrix()
     video_path = "./test-media/theAppleThatIsBad.mp4"
-    start()
-    matrixVideo.decode(video_path)
+    start(video_path)
