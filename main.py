@@ -23,7 +23,7 @@ def matrixCheck() -> None:
         matrix_stat :str = matrixDisplay.matrix_output.get_nowait()
         print(f"Matrix status: {matrix_stat}")
         esp32serialMonitoring.writeSerial(f"Matrix status: {matrix_stat}")
-    except queue.Empty():
+    except queue.Empty:
         pass
 
 
