@@ -53,7 +53,7 @@ def adjustBrightness(brightness: int) -> None:
     brightness = max(0, min(100, brightness))
     print(f"recieved in matrix code {brightness}")
     matrix.brightness = brightness
-    display_on_both(current_frame)
+    display_on_both(curr)
 
 def ffmpeg_decode(path_to_video: str):
     global process
@@ -83,14 +83,13 @@ def display_on_both(frames :Image.Image):
     global offscreen
     global display_image
     global current_frame
+    current_frame = frames
     
     display_image.paste(frames, (0, 0))
     mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
     display_image.paste(mirrored, (64, 0))
-
-    current_frame = display_image
     
-    offscreen.SetImage(current_frame)
+    offscreen.SetImage(display_image)
     offscreen = matrix.SwapOnVSync(offscreen)
 
 
