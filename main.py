@@ -1,8 +1,7 @@
 import queue
 import time
 import esp32serialMonitoring
-#import matrixDisplay
-import matrixDisplayTesting as matrixDisplay
+import matrixDisplay
 import os
 
 g: int= 0

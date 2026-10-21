@@ -114,7 +114,6 @@ def playthe_video(path_to_video: str) -> None:
         process.wait()
 
         print("Clearing matrix")
-        matrix.Clear()
 
 
 def stop():
