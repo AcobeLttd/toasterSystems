@@ -62,12 +62,23 @@ def ffmpeg_decode(path_to_video: str):
             print(f"Error executing ffmpeg command: {e}")
             return
     
-   
+def display_on_both(frames):
+    global offscreen
+    global display_image
+    
+    display_image.paste(frames, (0, 0))
+    mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    display_image.paste(mirrored, (64, 0))
+    
+    offscreen.SetImage(display_image)
+    offscreen = matrix.SwapOnVSync(offscreen)
 
 
 def playthe_video(path_to_video: str) -> None:
     global matrix
     global process
+    global offscreen
+    global display_image
 
     print(f"Starting video playback for: {path_to_video}")
     
@@ -90,11 +101,12 @@ def playthe_video(path_to_video: str) -> None:
                 data.extend(chunk)
 
             if len(data) != FRAME_SIZE:
-                break
+                break 
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
+            display_on_both(frame)
 
-            display_image.paste(frame, (0, 0))
+            #display_image.paste(frame, (0, 0))
 
             try:
                 bright = matrix_brightness.get_nowait()
@@ -102,11 +114,11 @@ def playthe_video(path_to_video: str) -> None:
             except queue.Empty:
                 pass
 
-            mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-            display_image.paste(mirrored, (64, 0))
+            #mirrored = frame.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+            #display_image.paste(mirrored, (64, 0))
 
-            offscreen.SetImage(display_image)
-            offscreen = matrix.SwapOnVSync(offscreen)
+            #offscreen.SetImage(display_image)
+            #offscreen = matrix.SwapOnVSync(offscreen)
  
     finally:
         print("Cleaning up FFmpeg")
