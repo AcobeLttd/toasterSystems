@@ -18,9 +18,17 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
+def shutdown():
+    image = Image.open("./test-media/horrifying.png").convert("RGB")
+    image = image.resize((64, 32), Image.Resampling.BICUBIC)
+    image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    display_on_both(image)
+
+    stop_event.set()
+    #shutdown animation or something idfk
+
 
 def default():
-    global matrix
     image = Image.open("./test-media/blåhaj.png").convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
     image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
