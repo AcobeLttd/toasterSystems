@@ -66,6 +66,13 @@ function initButton() {
     document.getElementById('button').addEventListener('click', toggle);
 }
 function toggle() {
-    websocket.send('toggle');
-    console.log('Button pressed');
+    if (websocket && websocket.readyState === websocket.OPEN){
+        websocket.send(JSON.stringify({
+            command: "toggle"
+        }));
+        console.log('Button pressed');
+    }
+    else {
+        console.log('Error with sending toggle.')
+    }
 }
