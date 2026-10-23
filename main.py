@@ -27,33 +27,45 @@ def shutdownPrint() -> None:
     print("Shutting down, bye bye!")
     currentTime :float= time.monotonic()
     pass
+def stopMatrixVideo() -> None:
+    global matrix_thread
+
+    print("Stopping video playback.")
+
+    esp32serialMonitoring.writeSerial("Stopping video playback.")
+
+    matrixDisplay.stop_playing()
+
+    if matrix_thread is not None:
+
+        matrix_thread.join(timeout=3)
+
+        if matrix_thread.is_alive():
+
+            print("Playback thread is still stopping.")
+
+            return
+        
+        matrix_thread = None
+
+    if matrix_thread is not None and matrix_thread.is_alive():
+
+        matrixDisplay.stop_event.set()
+        matrix_thread.join(timeout=3)
 
 def playMatrixVideo(path_to_video :str) -> None:    
     global matrix_thread
-    if path_to_video == "stop":
-        print("Stopping video playback.")
-        esp32serialMonitoring.writeSerial("Stopping video playback.")
-        matrixDisplay.stop_event.set()
-        matrixDisplay.default()
-        if matrix_thread is not None:
-            matrix_thread.join(timeout=3)
 
-            if matrix_thread.is_alive():
-                print("Playback thread is still stopping.")
-                return
-
-            matrix_thread = None
-
-        return
-    if matrix_thread is not None and matrix_thread.is_alive():
-        matrixDisplay.stop_event.set()
-        matrix_thread.join(timeout=3)
     print(f"Playing video: {path_to_video}")
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
+
     try:
+
         matrix_thread = matrixDisplay.start(path_to_video)
         matrixDisplay.stop_event.clear()
+
     except Exception as e:
+
         print(f"Error playing video '{path_to_video}': {e}")
         esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
 
@@ -67,15 +79,23 @@ def matrixBrightness(brightness :str) -> None:
         return
     matrixDisplay.adjustBrightness(int_bright)
 
-def matrixFunctions(command :str, argument :str, *args :str):
-    if args is not None:
-        if command == "play":
-            playMatrixVideo(argument)        
-        elif command in ("brightness", "br"):
-            matrixBrightness(argument)
-        else:
-            print(f"{command} not recognized as a command.")
-            esp32serialMonitoring.writeSerial(f"{command} not recognized as a command for matrix.")
+def matrixFunctions(command :str, argument :str):
+    handler :callable = matrix_commands.get(command)
+    if handler is not None:
+        try:
+            handler(argument)
+        except Exception as e:
+            print(f"Error executing matrix command '{command}': {e}")
+    else:
+        print(f"No handler found for matrix command '{command}'")
+
+
+matrix_commands :dict = {
+    "play": playMatrixVideo,
+    "brightness": matrixBrightness,
+    "br": matrixBrightness,
+    "stop": stopMatrixVideo
+}
 
 commands :dict = {
     "shutdown": shutdownPrint,

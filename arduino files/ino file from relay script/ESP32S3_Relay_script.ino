@@ -6,7 +6,7 @@
 
 
 /***
-  Acobe/lttd - Class 1ELF Rud VGS 2026
+  Acobe/lttd
   This code has been heavily modified from its original.
   Changes:
   - Modified the code to send json between the server and client enabling multiple variables to be sent instead of just a singular variable.
@@ -46,25 +46,23 @@
 
 Adafruit_SSD1306 display(screenWidth, screenHeight, &Wire, oledReset);
 
+// Serial2 coms setup
+const uint8_t SerialTXPin = 43;
+const uint8_t SerialRXPin = 44;
+
 // Network credentials for the ESP32 AP.
 const char *ssid = "ESP32-S3-Relay";
 const char *password = "IamBigStrongPassword2";
 
 // Defines the boolean values used later.
 
-bool pirState = 0;      // Used to display the state of the PIR sensor.
-bool prevPirState = 0;  // Previous Pir status.
-bool pirOverride = 0;   // Used to for the user to override the PIR sensor status. IE turn off a light while still in the room.
-bool relayState = 0;    // Used for the relay state.
 bool wsConnected = 0;   // Used to check if the websocket connected or not.
 
-bool requireWebserver = false;  // Put this to true if you want to have the code running even though nobody is connected to the webserver.
+bool requireWebserver = true;  // Put this to true if you want to have the code running even though nobody is connected to the webserver.
 
 // Defines the pins for the diffrent components connected to the ESP32-S3
 
-const int relayPin = 3;  //GPIO 3
-const int PIR = 2;       //GPIO 2
-const int pot = 9;       //GPIO 9
+
 
 // Millis for non-blocking delays.
 
@@ -439,57 +437,12 @@ bool readPir() {  // reads the pir and then just returns the value. To be honest
   return statePir;
 }
 
-void signature() {
-  Serial.print(R"rawr(
-
-
-Signature
-Original code by Rui Santos & Sara Santos at Random Nerd Tutorials (https://RandomNerdTutorials.com/esp32-websocket-server-arduino/)
-
-Heavily modified by Acobe/lttd 1ELF(2026) at Rud videregående skole.)rawr");
-  Serial.flush();
-  Serial.print(R"rawr(
-Contact: lttd@outlook.com
-
-Entire code and documentation as well as project files are hosted on https://github.com/AcobeLttd/-1ELF-ESP32-S3-Controlled-relay-V2
-
-)rawr");
-  Serial.flush();
-  Serial.print(R"rawr(
-License:
-
-MIT License
-
-Copyright (c) 2026 Acobe
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
-
-
-)rawr");
-  Serial.flush();
-}
 
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
+  // Starts serial comms for the raspi.
+  Serial2.begin(115200, SERIAL_8N1, SerialRXPin, SerialTXPin);
 
   // Initialises the OLED display on the I2C bus. (Code from adafruit)
 
@@ -532,8 +485,6 @@ void setup() {
   displayIP(); 
 
   delay(5000);  // These are the ONLY code blocking delays in the entire code and just ensures the signature gets sent through serial monitor.
-  // Sends the signature and license at the end of the setup.
-  signature();
   // Displays IP information again after the delay in case the serial monitor IP information didnt get sent properly.
   displayIP(); 
 
@@ -599,9 +550,6 @@ void loop() {
     sprintf(buf, "\n\n\nNo websocket connected, code innactive. Sent at %ld millis.", t.currentTime);
     Serial.print(buf);
     displayIP();  // Calls the display IP function to print the IP and WiFi AP info in terminal as well as on the OLED.
-
-    relayState = false;
-    pirState = false;
   }
 
 

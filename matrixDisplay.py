@@ -1,6 +1,5 @@
 import subprocess
 import threading
-import queue
 from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -22,17 +21,20 @@ def shutdown():
     stop_event.set()
     global matrix
     image = Image.open("./test-media/horrifying.png").convert("RGB")
-    image = image.resize((64, 32), Image.Resampling.BICUBIC)
+    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
     image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
     display_on_both(image)
 
     
     #shutdown animation or something idfk
 
+def stop_playing():
+    stop_event.set()
+    default()
 
 def default():
     image = Image.open("./test-media/blåhaj.png").convert("RGB")
-    image = image.resize((64, 32), Image.Resampling.BICUBIC)
+    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
     image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
     display_on_both(image)
@@ -48,7 +50,7 @@ def initMatrix() -> None:
     options.chain_length = 2
     options.parallel = 1
     options.hardware_mapping = "regular"
-    options.brightness = 60
+    options.brightness = default_brightness
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
