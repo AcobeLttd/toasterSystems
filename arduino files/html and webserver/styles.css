@@ -32,10 +32,11 @@ body {
 
 .card {
     background-color: #F8F7F9;
-    ;
     box-shadow: 2px 2px 12px 1px rgba(140, 140, 140, .5);
     padding-top: 10px;
     padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .button {
@@ -79,7 +80,7 @@ body {
     font-size: 1.5rem;
     color: #8c8c8c;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
     padding: 10px;
 }
 
@@ -87,8 +88,23 @@ body {
     width: 70%;
     padding: 10px;
     margin: 10px;
-    text-align: left;
+    text-align: center;
     box-sizing: border-box;
+}
+.commandThing {
+    text-align: center;
+}
+
+.terminal {
+    background: #111;
+    color: #fff;
+    font-family: monospace;
+    padding: 5px;
+    height: 250px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    text-align: left;
 }
 
 p {

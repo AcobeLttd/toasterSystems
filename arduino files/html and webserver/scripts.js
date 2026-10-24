@@ -18,6 +18,7 @@ function onClose(event) {
 }
 // Function under here replaces all the placeholder values for the html code with actual values sent from the ESP32 via json.
 function onMessage(event) {
+    addTerminalMessage(event.data);
     const thingThing = JSON.parse(event.data);
     var state;
     if (thingThing.state) {
@@ -60,19 +61,65 @@ function onMessage(event) {
 }
 function onLoad(event) {
     initWebSocket();
-    initButton();
+    initButtons();
+    initTextInputs();
 }
-function initButton() {
-    document.getElementById('button').addEventListener('click', toggle);
+function initButtons() {
+    document.getElementById('button').addEventListener('click', playBadApple);
+    document.getElementById('button1').addEventListener('click', stopMatrix);
 }
-function toggle() {
-    if (websocket && websocket.readyState === websocket.OPEN){
+function initTextInputs() {
+    document.getElementById('commandLine').addEventListener('submit', sendSerial)
+}
+
+function initTerminal() {
+    const terminal = document.getElementById("terminal");
+
+    terminal.textContent = "random shit"
+}
+
+function sendSerial(event) {
+    event.preventDefault()
+}
+
+function addTerminalMessage(message) {
+    lines.push(String(message));
+
+    if (lines.length > MAX_LINES) {
+        lines.splice(0, lines.length - MAX_LINES);
+    }
+
+    if (!updatePending) {
+        updatePending = true;
+
+        requestAnimationFrame(() => {
+            terminal.textContent = lines.join("\n");
+            terminal.scrollTop = terminal.scrollHeight;
+            updatePending = false;
+        });
+    }
+}
+
+function playBadApple() {
+    const pathToVideo = "./test-media/theAppleThatIsBad.mp4"
+    const command = `matrix|play|${pathToVideo}`;
+    sendCommands(command);
+}
+
+function stopMatrix() {
+    const command = "matrix|stop";
+    sendCommands(command);
+}
+
+function sendCommands(command) {
+    console.log(`Trying to send: "${command}"`);
+    if (websocket && websocket.readyState === websocket.OPEN) {
         websocket.send(JSON.stringify({
-            command: "toggle"
+            command: command
         }));
-        console.log('Button pressed');
+        console.log(`command sent: ${command}`);
     }
     else {
-        console.log('Error with sending toggle.')
+        console.log('Error with sending command. Websocket most likely not connected.');
     }
 }
