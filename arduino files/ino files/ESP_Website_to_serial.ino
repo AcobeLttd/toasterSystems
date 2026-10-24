@@ -74,9 +74,6 @@ bool relayState = false;
 // Makes a global json variable which can be read any time.
 char globalJson[256];
 
-
-
-
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -109,6 +106,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     }
     
     const char *command = doc["command"] | "";
+
+    Serial.println((char *)command);
 
     if (strcmp((char *)command, "toggle") == 0) {
       relayState = !relayState;
@@ -178,11 +177,11 @@ void initMDNS() {
 
 void sendStat(bool state1, bool state2, bool state3, uint16_t state4, long state5) {
   JsonDocument doc;
-  doc["state"] = state1;
+  doc["piConnect"] = state1;
   doc["pirState"] = state2;
   doc["pirOverride"] = state3;
   doc["delay"] = state4;
-  doc["pirTime"] = state5;
+  doc["lastMessage"] = state5;
   serializeJson(doc, globalJson, sizeof(globalJson));
   send(doc);
 }
@@ -233,6 +232,8 @@ void displayIP() {
 
 void displayState(bool x, bool pirS, uint8_t potentiometer) {
 
+  /*Change all of this shit
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(10, 2);
@@ -262,6 +263,7 @@ void displayState(bool x, bool pirS, uint8_t potentiometer) {
   } else {
     display.drawCircle(screenWidth - 6, 5, 3, WHITE);
   }
+  */
 }
 void setup() {
  
@@ -303,10 +305,6 @@ void setup() {
   // Displays IP information
   displayIP();
 
-  
-  
-
-
 
 
   delay(10000);
@@ -334,14 +332,11 @@ void loop() {
 
 
   if (t.currentTime - t.pastSerialMessage >= serialMessageInterval) {  // The serial message intervals.
-    serialUpdate();                                                   // calls the SerialUpdate function to update variables in serial monitor for debugging.
-  } else if (t.currentTime - t.pastSerialMessage >= serialMessageInterval) {  // Prints an error message to serial every 2 seconds if requireWebserver is true.
-    char buf[128];
-    sprintf(buf, "\n\n\nNo websocket connected, code innactive. Sent at %ld millis.", t.currentTime);
-    Serial.print(buf);
-    displayIP();  // Calls the display IP function to print the IP and WiFi AP info in terminal as well as on the OLED.
-    display.display();    // Displays the newest information
-  }
+    serialUpdate();                                                    // calls the SerialUpdate function to update variables in serial monitor for debugging.
+    display.display();                                                 // Displays the newest information
+  } 
+    
+  
 
 
   if (t.currentTime - t.pastSerialMessage >= serialMessageInterval) t.pastSerialMessage = t.currentTime;  // Updates the past serial message.
