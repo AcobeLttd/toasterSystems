@@ -69,7 +69,7 @@ bool timeoutPing = false;
 
 // Raspi connection Bools
 
-bool connection = true;
+bool connection = false;
 bool piOff = false;
 
 
@@ -82,7 +82,7 @@ AsyncWebSocket ws("/ws");
 // Makes a global JSON document.
 JsonDocument globalJson;
 void initJSON() {
-  globalJson["piConnect"] = false;
+  globalJson["piConnect"] = connection;
   globalJson["lastMessage"] = 0;
 }
 
@@ -275,6 +275,7 @@ void isPiThere() {
       debugSend("No connection from pi.");
       pingIng();
       connection = false;
+      globalJson["piConnect"] = connection;
     }
     if ((!connection) && tMillis.currentTimeMillis - tMillis.keepPinging >= 1000) {
       pingIng();
@@ -328,9 +329,13 @@ void loop() {
   if (Serial2.available() > 0) {
     char buffer[128];
     snprintf(buffer, sizeof(buffer),"Last Response from pi %lu millis ago. \n", tMillis.currentTimeMillis - tMillis.lastResponse);
+    globalJson["lastMessage"] = (tMillis.currentTimeMillis - tMillis.lastResponse)/1000;
     debugSend(String(buffer));
     tMillis.lastResponse = tMillis.currentTimeMillis;
+
     connection = true;
+    globalJson["piConnect"] = connection;
+
     String readse = readSerial2();
     snprintf(buffer, sizeof(buffer),"From Pi: %s\n", readse.c_str());
     debugSend(String(buffer));

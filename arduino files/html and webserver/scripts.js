@@ -1,7 +1,47 @@
 
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
+
+const terminalThing = {
+    element: null,
+    maxLines: 200,
+    lines: ["Waiting for ESP32..."],
+    updatePending: false,
+    lastMessage: null,
+
+    init() {
+        this.element = document.getElementById("terminal");
+    },
+
+    addMessage(message) {
+        message = String(message);
+
+        if (message === this.lastMessage) {
+            return;
+        }
+
+        this.lastMessage = message;
+        this.lines.push(String(message));
+
+        if (this.lines.length > this.maxLines) {
+            this.lines.splice(0, this.lines.length - this.maxLines);
+        }
+
+        if (!this.updatePending) {
+            this.updatePending = true;
+
+            requestAnimationFrame(() => {
+                this.element.textContent = this.lines.join("\n");
+                this.element.scrollTop = this.element.scrollHeight;
+                this.updatePending = false;
+            });
+        }
+    }
+};
+
 window.addEventListener('load', onLoad);
+
+
 function initWebSocket() {
     console.log('Trying to open a WebSocket connection...');
     websocket = new WebSocket(gateway);
@@ -16,17 +56,41 @@ function onClose(event) {
     console.log('Connection closed');
     setTimeout(initWebSocket, 2000);
 }
+
+function onLoad(event) {
+    initWebSocket();
+    initButtons();
+    initTextInputs();
+    terminalThing.init();
+}
+function initButtons() {
+    document.getElementById('button').addEventListener('click', playBadApple);
+    document.getElementById('button1').addEventListener('click', stopMatrix);
+    document.getElementById('shutdown').addEventListener('click', shutdown);
+}
+function initTextInputs() {
+    document.getElementById('commandLine').addEventListener('submit', sendSerial)
+}
+
+function sendSerial(event) {
+    event.preventDefault()
+}
+
 // Function under here replaces all the placeholder values for the html code with actual values sent from the ESP32 via json.
 function onMessage(event) {
-    addTerminalMessage(event.data);
     const thingThing = JSON.parse(event.data);
-    var state;
-    if (thingThing.state) {
-        state = "ON";
+
+    terminalThing.addMessage(thingThing.debug);
+
+    var piConnect;
+    if (thingThing.piConnect) {
+        piConnect = "Connected";
     }
     else {
-        state = "OFF";
+        piConnect = "Disconnected";
     }
+    document.getElementById('piConnect').innerText = piConnect;
+    console.log('Data Recieved Relay: ', thingThing.piConnect);
 
     document.getElementById('delay').innerText = thingThing.delay + " min";
     console.log('Data Recieved Delay: ', thingThing.delay);
@@ -52,62 +116,24 @@ function onMessage(event) {
     document.getElementById('pirOverride').innerText = pirOverride;
     console.log('Data Recieved pirOverride: ', thingThing.pirOverride);
 
-    document.getElementById('pirTime').innerText = thingThing.pirTime + " secs";
-    console.log('Data Recieved pirTime: ', thingThing.pirTime);
-
-
-    document.getElementById('state').innerText = state;
-    console.log('Data Recieved Relay: ', thingThing.state);
-}
-function onLoad(event) {
-    initWebSocket();
-    initButtons();
-    initTextInputs();
-}
-function initButtons() {
-    document.getElementById('button').addEventListener('click', playBadApple);
-    document.getElementById('button1').addEventListener('click', stopMatrix);
-}
-function initTextInputs() {
-    document.getElementById('commandLine').addEventListener('submit', sendSerial)
-}
-
-function initTerminal() {
-    const terminal = document.getElementById("terminal");
-
-    terminal.textContent = "random shit"
-}
-
-function sendSerial(event) {
-    event.preventDefault()
-}
-
-function addTerminalMessage(message) {
-    lines.push(String(message));
-
-    if (lines.length > MAX_LINES) {
-        lines.splice(0, lines.length - MAX_LINES);
-    }
-
-    if (!updatePending) {
-        updatePending = true;
-
-        requestAnimationFrame(() => {
-            terminal.textContent = lines.join("\n");
-            terminal.scrollTop = terminal.scrollHeight;
-            updatePending = false;
-        });
-    }
+    document.getElementById('lastMessage').innerText = thingThing.lastMessage + " secs";
+    console.log('Data Recieved lastMessage: ', thingThing.lastMessage);
+    
 }
 
 function playBadApple() {
-    const pathToVideo = "./test-media/theAppleThatIsBad.mp4"
+    const pathToVideo = "./test-media/theAppleThatIsBad.mp4";
     const command = `matrix|play|${pathToVideo}`;
     sendCommands(command);
 }
 
 function stopMatrix() {
     const command = "matrix|stop";
+    sendCommands(command);
+}
+
+function shutdown() {
+    const command = "shutdown";
     sendCommands(command);
 }
 
