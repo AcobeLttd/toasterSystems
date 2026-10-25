@@ -73,6 +73,15 @@ def adjustBrightness(brightness: int) -> None:
     matrix.brightness = brightness
     display_on_both(current_frame)
 
+def detect_and_stop_ffmpeg():
+    global process
+    if process is not None and process.poll() is None:
+        print("ffmepg still running. Terminating before starting new.")
+        matrix_output.put("ffmepg still running. Terminating before starting new.")
+        process.kill()
+        process.wait()
+        pass
+
 def ffmpeg_decode(path_to_video: str):
     if isImage(path_to_video):
         print(f"Running stop command. {path_to_video} is either corrupted or not a video")
@@ -90,12 +99,8 @@ def ffmpeg_decode(path_to_video: str):
         "-f", "rawvideo",
         "pipe:1",
     ]
-    if process is not None and process.poll() is None:
-        print("ffmepg still running. Terminating before starting new.")
-        matrix_output.put("ffmepg still running. Terminating before starting new.")
-        process.kill()
-        process.wait()
-        pass
+
+    detect_and_stop_ffmpeg()
 
     try:
         process = subprocess.Popen(
@@ -119,7 +124,8 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
-
+    stop_playing()
+    
     if isImage(path_to_image) is not True:
         print(f"Error executing. {path_to_image} is either corrupted or not an image")
         matrix_output.put(f"Error executing. {path_to_image} is either corrupted or not an image")
