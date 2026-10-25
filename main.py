@@ -18,6 +18,14 @@ pastTime :float= 0
 
 print("Script started.")
 
+def matrixCheck() -> None:
+    try:
+        matrix_stat :str = matrixDisplay.matrix_output.get_nowait()
+        print(f"Matrix status: {matrix_stat}")
+        esp32serialMonitoring.writeSerial(f"Matrix status: {matrix_stat}")
+    except queue.Empty:
+        pass
+
 
 def shutdownPrint() -> None:
     print("Shutdown Recieved\n")
@@ -61,7 +69,6 @@ def playMatrixVideo(path_to_video :str) -> None:
     esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
 
     try:
-
         matrix_thread = matrixDisplay.start(path_to_video)
         matrixDisplay.stop_event.clear()
 
@@ -121,6 +128,7 @@ commands :dict = {
 try:
     while True: #Infinite loop, sort of like void loop
         try:
+            matrixCheck()
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
             parts = fromEsp.split("|")
 

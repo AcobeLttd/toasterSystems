@@ -1,11 +1,14 @@
 import subprocess
 import threading
+import queue
 from PIL import Image, UnidentifiedImageError
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
 default_brightness :int=60
+
+matrix_output = queue.Queue()
 
 matrix = None
 
@@ -66,12 +69,14 @@ def adjustBrightness(brightness: int) -> None:
     global matrix
     brightness = max(0, min(100, brightness))
     print(f"recieved in matrix code {brightness}")
+    matrix_output.put(f"recieved in matrix code {brightness}")
     matrix.brightness = brightness
     display_on_both(current_frame)
 
 def ffmpeg_decode(path_to_video: str):
     if isImage(path_to_video):
         print(f"Running stop command. {path_to_video} is either corrupted or not a video")
+        matrix_output.put(f"Running stop command. {path_to_video} is either corrupted or not a video")
         return False
     global process
     cmd = [
@@ -87,6 +92,7 @@ def ffmpeg_decode(path_to_video: str):
     ]
     if process is not None and process.poll() is None:
         print("ffmepg still running. Terminating before starting new.")
+        matrix_output.put("ffmepg still running. Terminating before starting new.")
         process.kill()
         process.wait()
         pass
@@ -100,6 +106,7 @@ def ffmpeg_decode(path_to_video: str):
             
     except subprocess.CalledProcessError as e:
             print(f"Error executing ffmpeg command: {e}")
+            matrix_output.put(f"Error executing ffmpeg command: {e}")
             return False
     return True
     
@@ -115,6 +122,7 @@ def display_the_image(path_to_image):
 
     if isImage(path_to_image) is not True:
         print(f"Error executing. {path_to_image} is either corrupted or not an image")
+        matrix_output.put(f"Error executing. {path_to_image} is either corrupted or not an image")
         return False
     
     image = Image.open("./test-media/toasterThing.png").convert("RGBA")
@@ -146,10 +154,12 @@ def playthe_video(path_to_video: str) -> None:
     global display_image
 
     print(f"Starting video playback for: {path_to_video}")
+    matrix_output.put(f"Starting video playback for: {path_to_video}")
     
     
     if ffmpeg_decode(path_to_video) is not True:
-        print( f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+        print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+        matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
         return
 
 
@@ -173,15 +183,18 @@ def playthe_video(path_to_video: str) -> None:
  
     finally:
         print("Cleaning up FFmpeg")
+        matrix_output.put("Cleaning up FFmpeg")
 
     
         print("Force killing FFmpeg")
+        matrix_output.put("Force killing FFmpeg")
         process.kill()
         process.wait()
 
 
 def start(path_to_video: str) -> threading.Thread:
     print(f"Starting video playback thread for: {path_to_video}")
+    matrix_output.put(f"Starting video playback thread for: {path_to_video}"
     thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
     return thread
