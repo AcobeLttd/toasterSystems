@@ -101,6 +101,7 @@ def ffmpeg_decode(path_to_video: str):
     except subprocess.CalledProcessError as e:
             print(f"Error executing ffmpeg command: {e}")
             return False
+    return True
     
 def isImage(filePath: str) -> bool:
     try:
@@ -148,8 +149,8 @@ def playthe_video(path_to_video: str) -> None:
     
     
     if ffmpeg_decode(path_to_video) is not True:
-        print("problem with ffmpeg.")
-        return f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error."
+        print( f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+        return
 
 
     try:
