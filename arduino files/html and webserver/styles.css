@@ -57,6 +57,8 @@ body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+
+
 .button:hover {
     background-color: #1a6a6b;
     text-align: center;
@@ -67,6 +69,18 @@ body {
     box-shadow: 2 2px #CDCDCD;
     transform: translateY(2px);
     text-align: center;
+}
+
+.shutdownButton {
+    background-color: #ff0000;
+}
+
+.shutdownButton:hover {
+    background-color: #7e1d1d;
+}
+
+.shutdownButton:active {
+    background-color: #ff0000;
 }
 
 .state {

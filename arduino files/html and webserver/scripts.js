@@ -67,10 +67,12 @@ function initButtons() {
     document.getElementById('button').addEventListener('click', playBadApple);
     document.getElementById('button1').addEventListener('click', stopMatrix);
     document.getElementById('shutdown').addEventListener('click', shutdown);
+    document.getElementById('displayImage').addEventListener('click', displayImage);
 }
 function initTextInputs() {
-    document.getElementById('progrenCLI').addEventListener('submit', sendSerial)
-    document.getElementById('videoPath').value = "./test-media/theAppleThatIsBad.mp4"
+    document.getElementById('progrenCLI').addEventListener('submit', sendSerial);
+    document.getElementById('videoPath').value = "./test-media/theAppleThatIsBad.mp4";
+    document.getElementById('imagePath').value = "./test-media/actualPNGtest.png";
 }
 
 function sendSerial(event) {
@@ -132,6 +134,18 @@ function getPathForVideo() {
     const input = document.getElementById('videoPath');
     const command = input.value.trim();
     return command;
+}
+
+function getPathForImage() {
+    const input = document.getElementById('imagePath');
+    const command = input.value.trim();
+    return command;
+}
+
+function displayImage() {
+    const pathToVideo = getPathForImage();
+    const command = `matrix|display|${pathToVideo}`;
+    sendCommands(command);
 }
 
 
