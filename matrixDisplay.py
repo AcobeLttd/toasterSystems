@@ -1,6 +1,6 @@
 import subprocess
 import threading
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
@@ -70,6 +70,9 @@ def adjustBrightness(brightness: int) -> None:
     display_on_both(current_frame)
 
 def ffmpeg_decode(path_to_video: str):
+    if isImage(path_to_video):
+        print(f"Running stop command. {path_to_video} is either corrupted or not a video")
+        return False
     global process
     cmd = [
         "ffmpeg",
@@ -97,7 +100,29 @@ def ffmpeg_decode(path_to_video: str):
             
     except subprocess.CalledProcessError as e:
             print(f"Error executing ffmpeg command: {e}")
-            return
+            return False
+    
+def isImage(filePath: str) -> bool:
+    try:
+        with Image.open(filePath) as image:
+            image.verify()
+        return True
+    except (UnidentifiedImageError, OSError, ValueError):
+        return False
+
+def display_the_image(path_to_image):
+
+    if isImage(path_to_image) is not True:
+        print(f"Error executing. {path_to_image} is either corrupted or not an image")
+        return False
+    
+    image = Image.open("./test-media/toasterThing.png").convert("RGBA")
+    image = image.resize((64, 32), Image.Resampling.BICUBIC)
+
+    display_on_both(image)
+
+    return True
+
     
 def display_on_both(frames :Image.Image):
     global offscreen
@@ -122,7 +147,9 @@ def playthe_video(path_to_video: str) -> None:
     print(f"Starting video playback for: {path_to_video}")
     
     
-    ffmpeg_decode(path_to_video)
+    if ffmpeg_decode(path_to_video) is not True:
+        print("problem with ffmpeg.")
+        return f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error."
 
 
     try:

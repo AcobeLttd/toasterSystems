@@ -11,10 +11,10 @@ options.hardware_mapping = "regular"
 matrix = RGBMatrix(options=options)
 
 
-image = Image.open("./test-media/toasterThing.png").convert("RGB")
+image = Image.open("./test-media/toasterThing.png").convert("RGBA")
 image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
-canvas = Image.new("RGB", (128, 32))
+canvas = Image.new("RGBA", (128, 32))
 mirrored = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
 canvas.paste(mirrored, (0, 0))

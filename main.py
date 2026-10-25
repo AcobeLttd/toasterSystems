@@ -27,6 +27,7 @@ def shutdownPrint() -> None:
     print("Shutting down, bye bye!")
     currentTime :float= time.monotonic()
     pass
+
 def stopMatrixVideo(placeholder :str) -> None:
     global matrix_thread
 
@@ -79,6 +80,16 @@ def matrixBrightness(brightness :str) -> None:
         return
     matrixDisplay.adjustBrightness(int_bright)
 
+def displayImage(path_to_image :str):
+
+    if matrixDisplay.display_the_image(path_to_image):
+        print(f"Displaying {path_to_image}")
+        esp32serialMonitoring.writeSerial(f"Displaying {path_to_image}")
+    else:
+        print(f"{path_to_image} is most likely corrupted or not an image.")
+        esp32serialMonitoring.writeSerial(f"{path_to_image} is most likely corrupted or not an image.")
+
+
 def matrixFunctions(command :str, argument :str = ""):
     handler :callable = matrix_commands.get(command)
     if handler is not None:
@@ -90,11 +101,13 @@ def matrixFunctions(command :str, argument :str = ""):
         print(f"No handler found for matrix command '{command}'")
 
 
+
 matrix_commands :dict = {
     "play": playMatrixVideo,
     "brightness": matrixBrightness,
     "br": matrixBrightness,
-    "stop": stopMatrixVideo
+    "stop": stopMatrixVideo,
+    "display": displayImage
 }
 
 commands :dict = {
