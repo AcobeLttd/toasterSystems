@@ -80,6 +80,12 @@ def ffmpeg_decode(path_to_video: str):
         "-f", "rawvideo",
         "pipe:1",
     ]
+    if process.poll() is None:
+        print("ffmepg still running. Terminating before starting new.")
+        process.kill()
+        process.wait()
+        pass
+
     try:
         process = subprocess.Popen(
             cmd,

@@ -79,7 +79,7 @@ def matrixBrightness(brightness :str) -> None:
         return
     matrixDisplay.adjustBrightness(int_bright)
 
-def matrixFunctions(command :str, argument :str):
+def matrixFunctions(command :str, argument :str = ""):
     handler :callable = matrix_commands.get(command)
     if handler is not None:
         try:
