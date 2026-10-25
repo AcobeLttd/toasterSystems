@@ -194,7 +194,7 @@ def playthe_video(path_to_video: str) -> None:
 
 def start(path_to_video: str) -> threading.Thread:
     print(f"Starting video playback thread for: {path_to_video}")
-    matrix_output.put(f"Starting video playback thread for: {path_to_video}"
+    matrix_output.put(f"Starting video playback thread for: {path_to_video}")
     thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
     thread.start()
     return thread
