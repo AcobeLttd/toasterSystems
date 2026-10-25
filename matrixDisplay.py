@@ -11,6 +11,8 @@ matrix = None
 
 current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
 
+process = None
+
 
 
 WIDTH, HEIGHT = 64, 32
