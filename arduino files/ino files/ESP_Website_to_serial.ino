@@ -172,6 +172,7 @@ void initMDNS() {
 // Sends JSON
 void send() {
   if (tMillis.currentTimeMillis - tMillis.pastTime >= jsonSendDelay) {
+    globalJson["lastMessage"] = (tMillis.currentTimeMillis - tMillis.lastResponse)/1000;
     const size_t len = measureJson(globalJson);
 
     // original API from me-no-dev
