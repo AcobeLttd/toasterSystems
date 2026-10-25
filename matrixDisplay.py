@@ -125,7 +125,7 @@ def display_the_image(path_to_image):
         matrix_output.put(f"Error executing. {path_to_image} is either corrupted or not an image")
         return False
     
-    image = Image.open("./test-media/toasterThing.png").convert("RGBA")
+    image = Image.open(path_to_image).convert("RGBA")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
     display_on_both(image)
