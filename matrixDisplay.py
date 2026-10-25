@@ -11,7 +11,7 @@ matrix = None
 
 current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
 
-process = 0
+process = None
 
 
 
@@ -82,7 +82,7 @@ def ffmpeg_decode(path_to_video: str):
         "-f", "rawvideo",
         "pipe:1",
     ]
-    if process.poll() is None:
+    if process is not None and process.poll() is None:
         print("ffmepg still running. Terminating before starting new.")
         process.kill()
         process.wait()
