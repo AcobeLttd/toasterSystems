@@ -27,7 +27,7 @@ def shutdownPrint() -> None:
     print("Shutting down, bye bye!")
     currentTime :float= time.monotonic()
     pass
-def stopMatrixVideo() -> None:
+def stopMatrixVideo(placeholder :str) -> None:
     global matrix_thread
 
     print("Stopping video playback.")
