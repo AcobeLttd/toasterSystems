@@ -69,11 +69,18 @@ function initButtons() {
     document.getElementById('shutdown').addEventListener('click', shutdown);
 }
 function initTextInputs() {
-    document.getElementById('commandLine').addEventListener('submit', sendSerial)
+    document.getElementById('progrenCLI').addEventListener('submit', sendSerial)
+    document.getElementById('videoPath').value = "./test-media/theAppleThatIsBad.mp4"
 }
 
 function sendSerial(event) {
-    event.preventDefault()
+    event.preventDefault();
+
+    const input = document.getElementById('commandLine');
+    const command = input.value.trim();
+
+    sendCommands(command);
+    input.value = "";
 }
 
 // Function under here replaces all the placeholder values for the html code with actual values sent from the ESP32 via json.
@@ -121,8 +128,16 @@ function onMessage(event) {
     
 }
 
+function getPathForVideo() {
+    const input = document.getElementById('videoPath');
+    const command = input.value.trim();
+    return command;
+}
+
+
+
 function playBadApple() {
-    const pathToVideo = "./test-media/theAppleThatIsBad.mp4";
+    const pathToVideo = getPathForVideo();
     const command = `matrix|play|${pathToVideo}`;
     sendCommands(command);
 }

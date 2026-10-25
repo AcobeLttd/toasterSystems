@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <title>Progen controler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,14 +24,19 @@
             <h2>idk another button</h2>
             <p><button id="button1" class="button">Stop Matrix</button></p>
             <p class="state">some integer state: <span id="delay" Error no connection</span></p>
-            <p><button id="button" class="button">Play bad apple</button></p>
+            <div class="commandThing">
+                <label class="input-text">Path to video: </label>
+                <input class="input" type="text" id="videoPath" name="path to video"
+                    placeholder="./test-media/theAppleThatIsBad.mp4">
+            </div>
+            <p><button id="button" class="button">Play video</button></p>
             <p class="buttonTitle">Shtudown btujt1</p>
             <p><button id="shutdown" class="button">shute de butoi</button></p>
-            <div class="card"
-                <h2>Progen things. Testing.</h2>
+            <div class="card" <h2>Progen things. Testing.</h2>
                 <form id="progrenCLI" class="commandThing">
                     <label class="input-text">Command line: </label>
-                    <input class="input" type="text" id="commandLine" name="Serial command line" placeholder="Enter command.">
+                    <input class="input" type="text" id="commandLine" name="Serial command line"
+                        placeholder="Enter command.">
                 </form>
                 <h2>So theres uh things here. Messages from ESP32</h2>
                 <div class="card">
