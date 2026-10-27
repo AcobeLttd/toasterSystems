@@ -14,6 +14,8 @@ matrix = None
 
 current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
 
+current_image = "./test-media/blåhaj.png"
+
 process = None
 
 
@@ -27,7 +29,6 @@ def shutdown():
     global matrix
     image = Image.open("./test-media/horrifying.png").convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
-    image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
     display_on_both(image)
 
     
@@ -38,9 +39,9 @@ def stop_playing():
     default()
 
 def default():
-    image = Image.open("./test-media/blåhaj.png").convert("RGB")
+    global current_image
+    image = Image.open(current_image).convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
-    image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
 
     display_on_both(image)
 
@@ -124,14 +125,16 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
-    stop_playing()
+    global current_image
+    current_image = path_to_image
+    stop_event.set()
     
-    if isImage(path_to_image) is not True:
-        print(f"Error executing. {path_to_image} is either corrupted or not an image")
-        matrix_output.put(f"Error executing. {path_to_image} is either corrupted or not an image")
+    if isImage(current_image) is not True:
+        print(f"Error executing. {current_image} is either corrupted or not an image")
+        matrix_output.put(f"Error executing. {current_image} is either corrupted or not an image")
         return False
     
-    image = Image.open(path_to_image).convert("RGBA")
+    image = Image.open(current_image).convert("RGBA")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
     display_on_both(image)
@@ -145,9 +148,9 @@ def display_on_both(frames :Image.Image):
     global current_frame
     current_frame = frames
     
-    display_image.paste(frames, (0, 0))
+    display_image.paste(frames, (64, 0))
     mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-    display_image.paste(mirrored, (64, 0))
+    display_image.paste(mirrored, (0, 0))
     
     offscreen.SetImage(display_image)
     offscreen = matrix.SwapOnVSync(offscreen)
