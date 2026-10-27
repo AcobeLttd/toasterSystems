@@ -27,7 +27,7 @@ FRAME_SIZE = WIDTH * HEIGHT * 3
 def shutdown():
     stop_event.set()
     global matrix
-    image = Image.open("./test-media/horrifying.png").convert("RGBA")
+    image = Image.open("./test-media/horrifying.png").convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
     display_on_both(image)
 
@@ -40,7 +40,7 @@ def stop_playing():
 
 def default():
     global current_image
-    image = Image.open(current_image).convert("RGBA")
+    image = Image.open(current_image).convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
 
     display_on_both(image)
@@ -61,7 +61,7 @@ def initMatrix() -> None:
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
     
-    display_image = Image.new("RGBA", (128, 32), (0, 0, 0))
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
     
     default()
 
@@ -134,7 +134,7 @@ def display_the_image(path_to_image):
         matrix_output.put(f"Error executing. {current_image} is either corrupted or not an image")
         return False
     
-    image = Image.open(current_image).convert("RGBA")
+    image = Image.open(current_image).convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
     display_on_both(image)
