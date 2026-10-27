@@ -6,7 +6,15 @@ Most of the code was written by hand. Some snippits have been copy pasted in fro
   
 The code will be double checked to remove unnecesarry parts thats not needed. This is very much still a prototype code.  
   
-Oh yeah remember to run the main.py with sudo -E or just run it as root.
+Oh yeah remember to run the main.py with sudo -E or just run it as root.  
+
+
+To do list. 
+- Finish usb detection abd mounting
+- Fix matrix bugs
+- Add file discover
+- Possibly changing communication to the esp32 to be with json
+- and uh idk
   
 Dependencies  
 time  
