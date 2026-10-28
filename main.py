@@ -210,7 +210,9 @@ try:
                             handler(*args)
                         except Exception as e:
                             print(f"Error executing command '{cmd}': {e}")
+                            main_debug(f"Error executing command '{cmd}': {e}")
                     else: 
+                        main_debug(f"No handler found for command '{cmd}'")
                         print(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
