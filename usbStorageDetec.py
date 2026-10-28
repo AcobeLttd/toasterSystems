@@ -35,7 +35,7 @@ def debug_the_things(device):
 
 def mount_drive(path_to_device :str):
     try:
-        subprocess.run(["sudo", "-n", "./scripts/mountThings.sh", path_to_device, path_to_mount_point])
+        subprocess.run(["sudo", "-n", "./scripts/mountThings.sh", path_to_device, path_to_mount_point], check=True)
         usb_output.put(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         print(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         return True
@@ -45,7 +45,7 @@ def mount_drive(path_to_device :str):
 
 def umount_drive():
     try:
-        subprocess.run(["sudo", "-n", "./scripts/umountThings.sh", path_to_mount_point])
+        subprocess.run(["sudo", "-n", "./scripts/umountThings.sh", path_to_mount_point], check=True)
         usb_output.put(f"attempting to unmount from {path_to_mount_point}")
         print(f"attempting to unmount from {path_to_mount_point}")
         return True
