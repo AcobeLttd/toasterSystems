@@ -23,6 +23,8 @@ json_to_esp32 :dict = {
     "main_debug": None
 }
 
+past_json :dict = None
+
 def matrix_debug(message :str):
     json_to_esp32["matrix"] = message
 
@@ -126,6 +128,8 @@ def matrixFunctions(command :str, argument :str = ""):
 
 def sendDebugJson():
     global json_to_esp32
+    global past_json
+    past_json = json_to_esp32
     json_to_send = json.dumps(json_to_esp32)
     esp32serialMonitoring.writeSerial(json_to_send)
 
@@ -168,7 +172,7 @@ try:
                         print(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
-        if json_to_esp32 is not json_to_esp32:
+        if json_to_esp32 is not past_json:
             sendDebugJson()
         currentTime :float= time.monotonic()
         if (currentTime-pastTime) >= 30:
