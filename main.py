@@ -1,5 +1,6 @@
 import queue
 import time
+import json
 import esp32serialMonitoring
 import matrixDisplay
 import os
@@ -16,13 +17,36 @@ matrix_thread = None
 currentTime :float= time.monotonic()
 pastTime :float= 0
 
+json_to_esp32 :dict = {
+    "matrix": None,
+    "usb": None,
+    "main_debug": None
+}
+
+
+matrix_commands :dict = {
+    "play": playMatrixVideo,
+    "brightness": matrixBrightness,
+    "br": matrixBrightness,
+    "stop": stopMatrixVideo,
+    "display": displayImage
+}
+
+commands :dict = {
+    "shutdown": shutdownPrint,
+    "matrix": matrixFunctions,
+    "Waiting for ESP32...": lambda: None  
+}
+
+
 print("Script started.")
+matrix_debug("Script started.")
 
 def matrixCheck() -> None:
     try:
         matrix_stat :str = matrixDisplay.matrix_output.get_nowait()
         print(f"Matrix status: {matrix_stat}")
-        esp32serialMonitoring.writeSerial(f"Matrix status: {matrix_stat}")
+        matrix_debug(matrix_stat)
     except queue.Empty:
         pass
 
@@ -41,7 +65,7 @@ def stopMatrixVideo(placeholder :str) -> None:
 
     print("Stopping video playback.")
 
-    esp32serialMonitoring.writeSerial("Stopping video playback.")
+    matrix_debug("Stopping video playback.")
 
     matrixDisplay.stop_playing()
 
@@ -66,7 +90,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     global matrix_thread
 
     print(f"Playing video: {path_to_video}")
-    esp32serialMonitoring.writeSerial(f"Playing video: {path_to_video}")
+    matrix_debug(f"Playing video: {path_to_video}")
 
     try:
         matrix_thread = matrixDisplay.start(path_to_video)
@@ -75,7 +99,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     except Exception as e:
 
         print(f"Error playing video '{path_to_video}': {e}")
-        esp32serialMonitoring.writeSerial(f"Error playing video '{path_to_video}': {e}")
+        matrix_debug(f"Error playing video '{path_to_video}': {e}")
 
 def matrixBrightness(brightness :str) -> None:
     try:
@@ -83,7 +107,7 @@ def matrixBrightness(brightness :str) -> None:
         print(f"converting to int value{int_bright}")
     except ValueError as e:
         print(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
-        esp32serialMonitoring.writeSerial(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
+        matrix_debug(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
         return
     matrixDisplay.adjustBrightness(int_bright)
 
@@ -91,10 +115,10 @@ def displayImage(path_to_image :str):
 
     if matrixDisplay.display_the_image(path_to_image):
         print(f"Displaying {path_to_image}")
-        esp32serialMonitoring.writeSerial(f"Displaying {path_to_image}")
+        matrix_debug(f"Displaying {path_to_image}")
     else:
         print(f"{path_to_image} is most likely corrupted or not an image.")
-        esp32serialMonitoring.writeSerial(f"{path_to_image} is most likely corrupted or not an image.")
+        matrix_debug(f"{path_to_image} is most likely corrupted or not an image.")
 
 
 def matrixFunctions(command :str, argument :str = ""):
@@ -107,21 +131,21 @@ def matrixFunctions(command :str, argument :str = ""):
     else:
         print(f"No handler found for matrix command '{command}'")
 
+def matrix_debug(message :str):
+    json_to_esp32["matrix"] = message
+
+def usb_debug(message :str):
+    json_to_esp32["usb"] = message
+
+def matrix_debug(message:str):
+    json_to_esp32["main_debug"] = message
+
+def sendDebugJson():
+    global json_to_esp32
+    json_to_send = json.dumps(json_to_esp32)
+    esp32serialMonitoring.writeSerial(json_to_send)
 
 
-matrix_commands :dict = {
-    "play": playMatrixVideo,
-    "brightness": matrixBrightness,
-    "br": matrixBrightness,
-    "stop": stopMatrixVideo,
-    "display": displayImage
-}
-
-commands :dict = {
-    "shutdown": shutdownPrint,
-    "matrix": matrixFunctions,
-    "Waiting for ESP32...": lambda: None  
-}
 
 
 
@@ -148,11 +172,13 @@ try:
                         print(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
+        if json_to_esp32 is not json_to_esp32:
+            sendDebugJson()
         currentTime :float= time.monotonic()
         if (currentTime-pastTime) >= 30:
             g+=1
             pastTime = currentTime
-            esp32serialMonitoring.writeSerial("Pi Connected "+str(g))
+            matrix_debug("Pi Connected "+str(g))
             print("hello world", g)
         
         

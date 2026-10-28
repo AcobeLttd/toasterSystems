@@ -3,8 +3,11 @@ import threading
 import subprocess
 import pyudev
 
+usb_output = queue.Queue()
+
 udev_version :int = pyudev.udev_version()
-print("udev version:", udev_version)
+
+usb_output.put("udev version:", udev_version)
 
 def debug_the_things(device):
     print(
