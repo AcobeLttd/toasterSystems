@@ -172,7 +172,7 @@ try:
                         print(f"No handler found for command '{cmd}'")
         except queue.Empty:
             pass
-        if json_to_esp32 is not past_json:
+        if json_to_esp32 != past_json:
             sendDebugJson()
         currentTime :float= time.monotonic()
         if (currentTime-pastTime) >= 30:
