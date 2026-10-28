@@ -75,6 +75,9 @@ def handle_event(device=None) -> None:
                 elif action == "remove":
                     usb_output.put(f"USB storage device removed: {path}")
                     print(f"USB storage device removed: {path}")
+                    umount_drive()
+                    usb_output.put(f"USB storage device unmounted: {path}")
+                    print(f"USB storage device unmounted: {path}")
             except (OSError, AttributeError) as e:
                 print(f"Error processing device event: {e}")
     except OSError as e:
