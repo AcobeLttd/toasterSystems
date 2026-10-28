@@ -14,7 +14,7 @@ matrix = None
 
 current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
 
-current_image = "./test-media/blåhaj.png"
+current_image_path = "./test-media/blåhaj.png"
 
 process = None
 
@@ -39,11 +39,25 @@ def stop_playing():
     default()
 
 def default():
-    global current_image
-    image = Image.open(current_image).convert("RGB")
-    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+    global current_image_path
+    global current_frame
 
-    display_on_both(image)
+    duration = 4
+    fps = 60
+
+    image1 = Image.open(current_image_path).convert("RGB")
+    image1 = image1.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+
+    image2 = current_frame
+
+    steps = max(1, int(duration*fps))
+
+    for i in range (steps + 1):
+        alpha = i / steps
+
+        final_image = Image.blend(image2, image1, alpha)
+
+        display_on_both(final_image)
 
 def initMatrix() -> None:
     global matrix
@@ -125,16 +139,16 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
-    global current_image
-    current_image = path_to_image
+    global current_image_path
+    current_image_path = path_to_image
     stop_event.set()
     
-    if isImage(current_image) is not True:
-        print(f"Error executing. {current_image} is either corrupted or not an image")
-        matrix_output.put(f"Error executing. {current_image} is either corrupted or not an image")
+    if isImage(current_image_path) is not True:
+        print(f"Error executing. {current_image_path} is either corrupted or not an image")
+        matrix_output.put(f"Error executing. {current_image_path} is either corrupted or not an image")
         return False
     
-    image = Image.open(current_image).convert("RGB")
+    image = Image.open(current_image_path).convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
     display_on_both(image)
@@ -160,7 +174,6 @@ def playthe_video(path_to_video: str) -> None:
     global matrix
     global process
     global offscreen
-    global display_image
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
