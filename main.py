@@ -129,7 +129,7 @@ def matrixFunctions(command :str, argument :str = ""):
 def sendDebugJson():
     global json_to_esp32
     global past_json
-    past_json = json_to_esp32
+    past_json = json_to_esp32.copy()
     json_to_send = json.dumps(json_to_esp32)
     esp32serialMonitoring.writeSerial(json_to_send)
 
