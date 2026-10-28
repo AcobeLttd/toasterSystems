@@ -11,7 +11,7 @@ g: int= 0
 
 serial_thread = esp32serialMonitoring.start()
 
-#usb_thread = usbStorageDetec.start()
+usb_thread = usbStorageDetec.start()
 
 matrixDisplay.initMatrix()
 
