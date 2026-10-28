@@ -50,7 +50,7 @@ def stop_playing():
 def displayBlendImage(new :Image.Image):
     global current_frame
 
-    duration = 4
+    duration = 2
     fps = 60
 
     image1 = new
