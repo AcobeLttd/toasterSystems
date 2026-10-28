@@ -31,13 +31,16 @@ def shutdown():
     global matrix
     image = Image.open("./test-media/horrifying.png").convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
-    display_on_both(image)
+    displayBlendImage(image)
 
     
     #shutdown animation or something idfk
 
 def stop_playing():
     stop_event.set()
+    if thread_matrix is not None and thread_matrix.is_alive():
+            thread_matrix.join()
+    thread_matrix = None
 
 def displayBlendImage(new :Image.Image):
     global current_frame
@@ -148,8 +151,6 @@ def isImage(filePath: str) -> bool:
 
 def display_the_image(path_to_image):
     stop_playing()
-    if thread_matrix is not None:
-        thread_matrix.join()
     global current_image_path
     current_image_path = path_to_image
     

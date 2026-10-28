@@ -76,11 +76,6 @@ def stopMatrixVideo(placeholder :str) -> None:
         
         matrix_thread = None
 
-    if matrix_thread is not None and matrix_thread.is_alive():
-
-        matrixDisplay.stop_event.set()
-        matrix_thread.join(timeout=3)
-
 def playMatrixVideo(path_to_video :str) -> None:    
     global matrix_thread
 
