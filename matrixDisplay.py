@@ -12,6 +12,8 @@ matrix_output = queue.Queue()
 
 matrix = None
 
+thread_matrix = None
+
 current_frame = Image.new("RGB", (64, 32), (0, 0, 0))
 
 current_image_path = "./test-media/blåhaj.png"
@@ -145,9 +147,11 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
+    stop_playing()
+    if thread_matrix is not None:
+        thread_matrix.join()
     global current_image_path
     current_image_path = path_to_image
-    stop_event.set()
     
     if isImage(current_image_path) is not True:
         print(f"Error executing. {current_image_path} is either corrupted or not an image")
@@ -225,9 +229,9 @@ def playthe_video(path_to_video: str) -> None:
 def start(path_to_video: str) -> threading.Thread:
     print(f"Starting video playback thread for: {path_to_video}")
     matrix_output.put(f"Starting video playback thread for: {path_to_video}")
-    thread = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
-    thread.start()
-    return thread
+    thread_matrix = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
+    thread_matrix.start()
+    return thread_matrix
 
 if __name__ == "__main__":
     video_path = "./test-media/theAppleThatIsBad.mp4"
