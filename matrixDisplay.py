@@ -37,6 +37,7 @@ def shutdown():
     #shutdown animation or something idfk
 
 def stop_playing():
+    global thread_matrix
     stop_event.set()
     if thread_matrix is not None and thread_matrix.is_alive():
             thread_matrix.join()
