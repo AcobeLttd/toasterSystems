@@ -186,7 +186,7 @@ usb_commands :dict = {
 commands :dict = {
     "shutdown": shutdownPrint,
     "matrix": matrixFunctions,
-    "usb": None,
+    "usb": lambda: None,
     "Waiting for ESP32...": lambda: None  
 }
 
