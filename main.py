@@ -11,7 +11,7 @@ g: int= 0
 
 serial_thread = esp32serialMonitoring.start()
 
-usb_thread = usbStorageDetec.start()
+#usb_thread = usbStorageDetec.start()
 
 matrixDisplay.initMatrix()
 
@@ -61,7 +61,6 @@ def shutdownPrint() -> None:
     time.sleep(10)
     print("Python effective UID:", os.geteuid())
     print("Shutting down, bye bye!")
-    currentTime :float= time.monotonic()
     pass
 
 def stopMatrixVideo(placeholder :str) -> None:
@@ -92,8 +91,9 @@ def playMatrixVideo(path_to_video :str) -> None:
     main_debug(f"Playing video: {path_to_video}")
 
     try:
-        matrix_thread = matrixDisplay.start(path_to_video)
         matrixDisplay.stop_event.clear()
+        matrix_thread = matrixDisplay.start(path_to_video)
+        
 
     except Exception as e:
 
