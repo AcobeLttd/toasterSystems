@@ -179,14 +179,14 @@ matrix_commands :dict = {
 }
 
 usb_commands :dict = {
-    "mount": None,
-    "unmount": None
+    "mount": lambda: None,
+    "unmount": lambda: None
 }
 
 commands :dict = {
     "shutdown": shutdownPrint,
     "matrix": matrixFunctions,
-    "usb": lambda: None,
+    "usb": usbFunctions,
     "Waiting for ESP32...": lambda: None  
 }
 
