@@ -36,7 +36,6 @@ def shutdown():
 
 def stop_playing():
     stop_event.set()
-    default()
 
 def displayBlendImage(new :Image.Image):
     global current_frame
