@@ -137,10 +137,10 @@ def ffmpeg_decode(path_to_video: str):
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
-            bufsize=FRAME_SIZE * 6, check=True
+            bufsize=FRAME_SIZE * 6, 
         )
             
-    except subprocess.CalledProcessError as e:
+    except OSError as e:
             print(f"Error executing ffmpeg command: {e}")
             matrix_output.put(f"Error executing ffmpeg command: {e}")
             return False
