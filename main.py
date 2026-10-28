@@ -49,8 +49,8 @@ def debugCheck() -> None:
         pass
     try:
         usb_stat :str = usbStorageDetec.usb_output.get_nowait()
-        print(f"Matrix status: {usb_stat}")
-        matrix_debug(usb_stat)
+        print(f"usb status: {usb_stat}")
+        usb_debug(usb_stat)
     except queue.Empty:
         pass
 

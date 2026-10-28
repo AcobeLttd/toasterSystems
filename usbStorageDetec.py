@@ -82,6 +82,7 @@ def handle_event(device) -> None:
 
 def start() -> threading.Thread:
     thread = threading.Thread(target=handle_event(None), daemon=False)
+    usb_output.put("usbStorage Detec thread started.")
     thread.start()
     return thread
     
