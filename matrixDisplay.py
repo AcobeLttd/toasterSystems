@@ -36,12 +36,16 @@ def shutdown():
     
     #shutdown animation or something idfk
 
-def stop_playing():
+def stop_the_thread():
     global thread_matrix
     stop_event.set()
     if thread_matrix is not None and thread_matrix.is_alive():
-            thread_matrix.join()
+        thread_matrix.join()
     thread_matrix = None
+
+def stop_playing():
+    stop_the_thread()
+    default()
 
 def displayBlendImage(new :Image.Image):
     global current_frame
@@ -151,7 +155,7 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
-    stop_playing()
+    stop_the_thread()
     global current_image_path
     current_image_path = path_to_image
     
@@ -216,7 +220,6 @@ def playthe_video(path_to_video: str) -> None:
 
  
     finally:
-        default()
         matrix_output.put("Fading last image.")
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
