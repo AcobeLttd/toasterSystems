@@ -204,6 +204,8 @@ def playthe_video(path_to_video: str) -> None:
 
  
     finally:
+        default()
+        matrix_output.put("Fading last image.")
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
 
