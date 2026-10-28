@@ -31,11 +31,11 @@ def matrix_debug(message :str):
 def usb_debug(message :str):
     json_to_esp32["usb"] = message
 
-def matrix_debug(message:str):
+def main_debug(message:str):
     json_to_esp32["main_debug"] = message
 
 print("Script started.")
-matrix_debug("Script started.")
+main_debug("Script started.")
 
 def matrixCheck() -> None:
     try:
@@ -60,7 +60,7 @@ def stopMatrixVideo(placeholder :str) -> None:
 
     print("Stopping video playback.")
 
-    matrix_debug("Stopping video playback.")
+    main_debug("Stopping video playback.")
 
     matrixDisplay.stop_playing()
 
@@ -85,7 +85,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     global matrix_thread
 
     print(f"Playing video: {path_to_video}")
-    matrix_debug(f"Playing video: {path_to_video}")
+    main_debug(f"Playing video: {path_to_video}")
 
     try:
         matrix_thread = matrixDisplay.start(path_to_video)
@@ -94,7 +94,7 @@ def playMatrixVideo(path_to_video :str) -> None:
     except Exception as e:
 
         print(f"Error playing video '{path_to_video}': {e}")
-        matrix_debug(f"Error playing video '{path_to_video}': {e}")
+        main_debug(f"Error playing video '{path_to_video}': {e}")
 
 def matrixBrightness(brightness :str) -> None:
     try:
@@ -102,7 +102,7 @@ def matrixBrightness(brightness :str) -> None:
         print(f"converting to int value{int_bright}")
     except ValueError as e:
         print(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
-        matrix_debug(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
+        main_debug(f"Variable {brightness} is most likely not an integer. Brightness only supports integers. Error {e}")
         return
     matrixDisplay.adjustBrightness(int_bright)
 
@@ -110,10 +110,10 @@ def displayImage(path_to_image :str):
 
     if matrixDisplay.display_the_image(path_to_image):
         print(f"Displaying {path_to_image}")
-        matrix_debug(f"Displaying {path_to_image}")
+        main_debug(f"Displaying {path_to_image}")
     else:
         print(f"{path_to_image} is most likely corrupted or not an image.")
-        matrix_debug(f"{path_to_image} is most likely corrupted or not an image.")
+        main_debug(f"{path_to_image} is most likely corrupted or not an image.")
 
 
 def matrixFunctions(command :str, argument :str = ""):
@@ -178,7 +178,7 @@ try:
         if (currentTime-pastTime) >= 30:
             g+=1
             pastTime = currentTime
-            matrix_debug("Pi Connected "+str(g))
+            main_debug("Pi Connected "+str(g))
             print("hello world", g)
         
         
