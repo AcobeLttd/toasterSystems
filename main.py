@@ -23,22 +23,6 @@ json_to_esp32 :dict = {
     "main_debug": None
 }
 
-
-matrix_commands :dict = {
-    "play": playMatrixVideo,
-    "brightness": matrixBrightness,
-    "br": matrixBrightness,
-    "stop": stopMatrixVideo,
-    "display": displayImage
-}
-
-commands :dict = {
-    "shutdown": shutdownPrint,
-    "matrix": matrixFunctions,
-    "Waiting for ESP32...": lambda: None  
-}
-
-
 print("Script started.")
 matrix_debug("Script started.")
 
@@ -146,7 +130,19 @@ def sendDebugJson():
     esp32serialMonitoring.writeSerial(json_to_send)
 
 
+matrix_commands :dict = {
+    "play": playMatrixVideo,
+    "brightness": matrixBrightness,
+    "br": matrixBrightness,
+    "stop": stopMatrixVideo,
+    "display": displayImage
+}
 
+commands :dict = {
+    "shutdown": shutdownPrint,
+    "matrix": matrixFunctions,
+    "Waiting for ESP32...": lambda: None  
+}
 
 
 try:
