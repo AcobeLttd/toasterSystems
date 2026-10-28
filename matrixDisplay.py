@@ -38,15 +38,13 @@ def stop_playing():
     stop_event.set()
     default()
 
-def default():
-    global current_image_path
+def blendImage(new :Image.Image):
     global current_frame
 
     duration = 4
     fps = 60
 
-    image1 = Image.open(current_image_path).convert("RGB")
-    image1 = image1.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+    image1 = new
 
     image2 = current_frame
 
@@ -57,7 +55,18 @@ def default():
 
         final_image = Image.blend(image2, image1, alpha)
 
-        display_on_both(final_image)
+        return(final_image)
+
+def default():
+    global current_image_path
+    global current_frame
+
+    image = Image.open(current_image_path).convert("RGB")
+    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+
+    blended_image = blendImage(image)
+
+    display_on_both(blended_image)
 
 def initMatrix() -> None:
     global matrix
@@ -151,7 +160,9 @@ def display_the_image(path_to_image):
     image = Image.open(current_image_path).convert("RGB")
     image = image.resize((64, 32), Image.Resampling.BICUBIC)
 
-    display_on_both(image)
+    blended_image = blendImage(image)
+
+    display_on_both(blended_image)
 
     return True
 
