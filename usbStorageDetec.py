@@ -9,7 +9,20 @@ udev_version :int = pyudev.udev_version()
 
 usb_output.put("udev version:", udev_version)
 
+path_to_mount_point = "/media/usb-drive"
+
+usb_information :dict = {
+    "device": None,
+    "partition": None,
+}
+
 def debug_the_things(device):
+    if device.get("DEVTYPE") == "disk":
+         usb_information["device"]=device.device_node
+    elif device.get("DEVTYPE") == "parttion":
+        usb_information["partition"]=device.device_node
+    else:
+        print(f"wtf is this device.")
     print(
         "\naction =", device.action,
         "\ntype =", device.get("DEVTYPE"),
@@ -20,13 +33,25 @@ def debug_the_things(device):
         "\nID_FS_TYPE =", device.get("ID_FS_TYPE"),
     )
 
-def mount_drive(path_to_device :str, path_to_mount_point :str):
+def mount_drive(path_to_device :str):
     try:
-        subprocess.run(["sudo", "-n", "mountThings.sh", path_to_device, path_to_mount_point])
-        pass
+        subprocess.run(["sudo", "-n", "./scripts/mountThings.sh", path_to_device, path_to_mount_point])
+        usb_output.put(f"attempting to mount {path_to_device} to {path_to_mount_point}")
+        print(f"attempting to mount {path_to_device} to {path_to_mount_point}")
+        return True
     except subprocess.CalledProcessError as e:
-        print(f"something went wrong: {e}")
-        pass
+        usb_output.put(f"something went wrong: {e}")
+        return False
+
+def umount_drive():
+    try:
+        subprocess.run(["sudo", "-n", "./scripts/umountThings.sh", path_to_mount_point])
+        usb_output.put(f"attempting to unmount from {path_to_mount_point}")
+        print(f"attempting to unmount from {path_to_mount_point}")
+        return True
+    except subprocess.CalledProcessError as e:
+        usb_output.put(f"something went wrong: {e}")
+        return False
 
 # def check_if_partiton(device):
 
@@ -41,29 +66,24 @@ def handle_event(device) -> None:
         for device in iter(monitor.poll, None):
             debug_the_things(device)
             try:
-                if device.get("DEVTYPE") == "disk":
-                                    print("oh shittings theres a disk!")
-                                    continue
-                elif device.get("DEVTYPE") != "partition":
-                    print("oh shittings theres no partition!")
-                    continue
-                
-                usb_device = device.find_parent("usb", "usb_device")
-                if usb_device is None: 
-                    print("oh shittings theres no usb device!")
-                    continue
-
                 action = device.action
                 path = device.device_node
 
                 if action == "add":
+                    usb_output.put(f"USB storage device added: {path}")
                     print(f"USB storage device added: {path}")
                 elif action == "remove":
+                    usb_output.put(f"USB storage device removed: {path}")
                     print(f"USB storage device removed: {path}")
             except (OSError, AttributeError) as e:
                 print(f"Error processing device event: {e}")
     except OSError as e:
         print(f"Error monitoring USB storage devices: {e}")
+
+def start() -> threading.Thread:
+    thread = threading.Thread(target=handle_event(None), daemon=False)
+    thread.start()
+    return thread
     
 
 def ohShittings():

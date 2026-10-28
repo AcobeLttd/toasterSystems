@@ -3,12 +3,15 @@ import time
 import json
 import esp32serialMonitoring
 import matrixDisplay
+import usbStorageDetec
 import os
 
 g: int= 0
 
 
 serial_thread = esp32serialMonitoring.start()
+
+usb_thread = usbStorageDetec.start()
 
 matrixDisplay.initMatrix()
 
@@ -37,11 +40,17 @@ def main_debug(message:str):
 print("Script started.")
 main_debug("Script started.")
 
-def matrixCheck() -> None:
+def debugCheck() -> None:
     try:
         matrix_stat :str = matrixDisplay.matrix_output.get_nowait()
         print(f"Matrix status: {matrix_stat}")
         matrix_debug(matrix_stat)
+    except queue.Empty:
+        pass
+    try:
+        usb_stat :str = usbStorageDetec.usb_output.get_nowait()
+        print(f"Matrix status: {usb_stat}")
+        matrix_debug(usb_stat)
     except queue.Empty:
         pass
 
@@ -118,8 +127,40 @@ def matrixFunctions(command :str, argument :str = ""):
             handler(argument)
         except Exception as e:
             print(f"Error executing matrix command '{command}': {e}")
+            main_debug(f"Error executing matrix command '{command}': {e}")
     else:
         print(f"No handler found for matrix command '{command}'")
+        main_debug(f"Error executing matrix command '{command}': {e}")
+
+def usbMount(argument):
+    if usbStorageDetec.mount_drive(argument):
+        print(f"Mounted {argument} to /media/usb-drive")
+        main_debug(f"Mounted {argument} to /media/usb-drive")
+    else:
+        print(f"Something went wrong trying to mount {argument}. Check logs")
+        main_debug(f"Something went wrong trying to mount {argument}. Check logs")
+
+def usbUmount(argument):
+    if usbStorageDetec.umount_drive(argument):
+        print(f"Unmounted {argument} to /media/usb-drive")
+        main_debug(f"Unounted {argument} to /media/usb-drive")
+    else:
+        print(f"Something went wrong trying to unmount {argument}. Check logs")
+        main_debug(f"Something went wrong trying to unmount {argument}. Check logs")
+
+
+
+def usbFunctions(command :str, argument :str = ""):
+    handler :callable = usb_commands.get(command)
+    if handler is not None:
+        try:
+            handler(argument)
+        except Exception as e:
+            print(f"Error executing usb command '{command}': {e}")
+            main_debug(f"Error executing usb command '{command}': {e}")
+    else:
+        print(f"No handler found for usb command '{command}'")
+        main_debug(f"No handler found for usb command '{command}'")
 
 def sendDebugJson():
     global json_to_esp32
@@ -137,9 +178,15 @@ matrix_commands :dict = {
     "display": displayImage
 }
 
+usb_commands :dict = {
+    "mount": None,
+    "unmount": None
+}
+
 commands :dict = {
     "shutdown": shutdownPrint,
     "matrix": matrixFunctions,
+    "usb": None,
     "Waiting for ESP32...": lambda: None  
 }
 
@@ -147,7 +194,7 @@ commands :dict = {
 try:
     while True: #Infinite loop, sort of like void loop
         try:
-            matrixCheck()
+            debugCheck()
             fromEsp :str= esp32serialMonitoring.serial_output.get(timeout=0.01)
             parts = fromEsp.split("|")
 
