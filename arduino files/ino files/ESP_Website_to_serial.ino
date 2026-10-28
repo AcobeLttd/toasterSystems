@@ -84,6 +84,8 @@ JsonDocument globalJson;
 void initJSON() {
   globalJson["piConnect"] = connection;
   globalJson["lastMessage"] = 0;
+  globalJson["matrix"] = 0;
+  globalJson["rpiDebug"] = 0;
 }
 
 
@@ -230,7 +232,7 @@ void pingDetect(String sah) {
   }
 }
 
-void detectPong(String readse) {
+bool detectPong(String readse) {
   if (readse == "pong") {
     tMicro.pingTime = micros() - tMicro.startPing;
     totalPing = totalPing + tMicro.pingTime;
@@ -238,6 +240,10 @@ void detectPong(String readse) {
     snprintf(buffer, sizeof(buffer),"ping time %lu microsec \n", tMicro.pingTime);
     debugSend(String(buffer));
     pingRec = true;
+    return true;
+  }
+  else {
+    return false;
   }
 }
 
@@ -284,6 +290,17 @@ void isPiThere() {
       tMillis.keepPinging = tMillis.currentTimeMillis;
     }
   }
+}
+
+void decodeRpiJson(const uint8_t* data, size_t len){
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, data, len);
+  if (error) {
+    return;
+  }
+  globalJson["matrix"] = doc["matrix"];
+  globalJson["rpiDebug"] = doc["main_debug"];
+
 }
 
 
@@ -341,7 +358,10 @@ void loop() {
     snprintf(buffer, sizeof(buffer),"From Pi: %s\n", readse.c_str());
     debugSend(String(buffer));
 
-    detectPong(readse);
+    if (detectPong(readse));
+    else {
+      decodeRpiJson((const uint8_t*)readse.c_str(), readse.length());
+  }
     if (readse == "Shutting down") {  //this stops the code from repeating the pinging forever. You would need to power off to reset this.
       piOff = true;
     }

@@ -2,42 +2,48 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
-const terminalThing = {
-    element: null,
-    maxLines: 200,
-    lines: ["Waiting for ESP32..."],
-    updatePending: false,
-    lastMessage: null,
+function makeTerminal(elementID, maxLines = 200) {
+    return {
+        element: null,
+        maxLines,
+        lines: ["Waiting for ESP32..."],
+        updatePending: false,
+        lastMessage: null,
 
-    init() {
-        this.element = document.getElementById("terminal");
-    },
+        init() {
+            this.element = document.getElementById(elementID);
+        },
 
-    addMessage(message) {
-        message = String(message);
+        addMessage(message) {
+            message = String(message);
 
-        if (message === this.lastMessage) {
-            return;
-        }
+            if (message === this.lastMessage) {
+                return;
+            }
 
-        this.lastMessage = message;
-        this.lines.push(String(message));
+            this.lastMessage = message;
+            this.lines.push(String(message));
 
-        if (this.lines.length > this.maxLines) {
-            this.lines.splice(0, this.lines.length - this.maxLines);
-        }
+            if (this.lines.length > this.maxLines) {
+                this.lines.splice(0, this.lines.length - this.maxLines);
+            }
 
-        if (!this.updatePending) {
-            this.updatePending = true;
+            if (!this.updatePending) {
+                this.updatePending = true;
 
-            requestAnimationFrame(() => {
-                this.element.textContent = this.lines.join("\n");
-                this.element.scrollTop = this.element.scrollHeight;
-                this.updatePending = false;
-            });
+                requestAnimationFrame(() => {
+                    this.element.textContent = this.lines.join("\n");
+                    this.element.scrollTop = this.element.scrollHeight;
+                    this.updatePending = false;
+                });
+            }
         }
     }
 };
+
+const terminalThing = makeTerminal("terminal");
+const matrixStatus = makeTerminal("matrixStatus");
+const rpiStatus = makeTerminal("rpiDebug");
 
 window.addEventListener('load', onLoad);
 
@@ -61,7 +67,10 @@ function onLoad(event) {
     initWebSocket();
     initButtons();
     initTextInputs();
+
     terminalThing.init();
+    matrixStatus.init();
+    rpiStatus.init();
 }
 function initButtons() {
     document.getElementById('button').addEventListener('click', playBadApple);
@@ -90,6 +99,14 @@ function onMessage(event) {
     const thingThing = JSON.parse(event.data);
 
     terminalThing.addMessage(thingThing.debug);
+    matrixStatus.addMessage(thingThing.matrix);
+    rpiStatus.addMessage(thingThing.rpiDebug);
+
+    document.getElementById('lastMessage').innerText = thingThing.lastMessage + " secs";
+    console.log('Data Recieved lastMessage: ', thingThing.lastMessage);
+
+    document.getElementById('delay').innerText = thingThing.delay + " min";
+    console.log('Data Recieved Delay: ', thingThing.delay);
 
     var piConnect;
     if (thingThing.piConnect) {
@@ -100,9 +117,6 @@ function onMessage(event) {
     }
     document.getElementById('piConnect').innerText = piConnect;
     console.log('Data Recieved Relay: ', thingThing.piConnect);
-
-    document.getElementById('delay').innerText = thingThing.delay + " min";
-    console.log('Data Recieved Delay: ', thingThing.delay);
 
     var pirState
     if (thingThing.pirState) {
@@ -115,19 +129,6 @@ function onMessage(event) {
     document.getElementById('pirSens').innerText = pirState;
     console.log('Data Recieved PIR: ', thingThing.pirState);
 
-    var pirOverride
-    if (thingThing.pirOverride) {
-        pirOverride = "Enabled";
-    }
-    else {
-        pirOverride = "Disabled";
-    }
-    document.getElementById('pirOverride').innerText = pirOverride;
-    console.log('Data Recieved pirOverride: ', thingThing.pirOverride);
-
-    document.getElementById('lastMessage').innerText = thingThing.lastMessage + " secs";
-    console.log('Data Recieved lastMessage: ', thingThing.lastMessage);
-    
 }
 
 function getPathForVideo() {
