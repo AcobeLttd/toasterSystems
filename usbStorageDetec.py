@@ -14,6 +14,7 @@ path_to_mount_point = "/media/usb-drive"
 usb_information :dict = {
     "device": None,
     "partition": None,
+    "debug": None
 }
 
 def debug_the_things(device):
