@@ -179,8 +179,8 @@ matrix_commands :dict = {
 }
 
 usb_commands :dict = {
-    "mount": lambda: None,
-    "unmount": lambda: None
+    "mount": usbMount,
+    "unmount": usbUmount
 }
 
 commands :dict = {
