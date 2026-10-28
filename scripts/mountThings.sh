@@ -5,10 +5,10 @@ set -e
 DEVICE=$1
 MOUNTPOINT=$2
 
-echo "device" DEVICE
+echo "device" $DEVICE
 
-echo "mountpoint" MOUNTPOINT
+echo "mountpoint" $MOUNTPOINT
 
-exec /usr/bin/mount DEVICE MOUNTPOINT
+exec /usr/bin/mount $DEVICE $MOUNTPOINT
 
 echo gay!
