@@ -51,7 +51,7 @@ def displayBlendImage(new :Image.Image):
 
     image1 = new
 
-    image2 = current_frame
+    image2 = current_frame.copy()
 
     steps = max(1, int(duration*fps))
 
