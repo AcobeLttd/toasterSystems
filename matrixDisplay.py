@@ -137,7 +137,7 @@ def ffmpeg_decode(path_to_video: str):
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
-            bufsize=FRAME_SIZE * 6,
+            bufsize=FRAME_SIZE * 6, check=True
         )
             
     except subprocess.CalledProcessError as e:
