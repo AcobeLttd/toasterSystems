@@ -23,6 +23,15 @@ json_to_esp32 :dict = {
     "main_debug": None
 }
 
+def matrix_debug(message :str):
+    json_to_esp32["matrix"] = message
+
+def usb_debug(message :str):
+    json_to_esp32["usb"] = message
+
+def matrix_debug(message:str):
+    json_to_esp32["main_debug"] = message
+
 print("Script started.")
 matrix_debug("Script started.")
 
@@ -114,15 +123,6 @@ def matrixFunctions(command :str, argument :str = ""):
             print(f"Error executing matrix command '{command}': {e}")
     else:
         print(f"No handler found for matrix command '{command}'")
-
-def matrix_debug(message :str):
-    json_to_esp32["matrix"] = message
-
-def usb_debug(message :str):
-    json_to_esp32["usb"] = message
-
-def matrix_debug(message:str):
-    json_to_esp32["main_debug"] = message
 
 def sendDebugJson():
     global json_to_esp32
