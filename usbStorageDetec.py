@@ -81,7 +81,7 @@ def handle_event(device) -> None:
         print(f"Error monitoring USB storage devices: {e}")
 
 def start() -> threading.Thread:
-    thread = threading.Thread(target=handle_event(None), daemon=False)
+    thread = threading.Thread(target=handle_event, daemon=False)
     usb_output.put("usbStorage Detec thread started.")
     print("usbStorage Detec thread started.")
     thread.start()
