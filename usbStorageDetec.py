@@ -56,7 +56,7 @@ def umount_drive():
 # def check_if_partiton(device):
 
 
-def handle_event(device) -> None:
+def handle_event(device=None) -> None:
     context = pyudev.Context()
 
     monitor = pyudev.Monitor.from_netlink(context)
