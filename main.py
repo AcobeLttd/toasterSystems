@@ -141,9 +141,9 @@ def usbMount(argument):
         main_debug(f"Something went wrong trying to mount {argument}. Check logs")
 
 def usbUmount(argument):
-    if usbStorageDetec.umount_drive(argument):
-        print(f"Unmounted {argument} to /media/usb-drive")
-        main_debug(f"Unounted {argument} to /media/usb-drive")
+    if usbStorageDetec.umount_drive():
+        print(f"Unmounted /media/usb-drive")
+        main_debug(f"Unounted /media/usb-drive")
     else:
         print(f"Something went wrong trying to unmount {argument}. Check logs")
         main_debug(f"Something went wrong trying to unmount {argument}. Check logs")
