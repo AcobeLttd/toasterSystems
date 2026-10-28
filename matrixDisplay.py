@@ -12,7 +12,7 @@ matrix_output = queue.Queue()
 
 matrix = None
 
-current_frame = Image.new("RGB", (128, 32), (0, 0, 0))
+current_frame = Image.new("RGB", (64, 32), (0, 0, 0))
 
 current_image_path = "./test-media/blåhaj.png"
 
