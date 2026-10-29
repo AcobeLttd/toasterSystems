@@ -110,6 +110,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     
     const char *command = doc["command"] | "";
 
+    pingDetect(String((char *)command));
+
     debugSend(String((char *)command));
 
     Serial2.println((char *)command);
@@ -120,7 +122,8 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
              void *arg, uint8_t *data, size_t len) {
   char buffer[128];
-  switch (type) {
+  switch (type) {'
+  '
     case WS_EVT_CONNECT:
       
       snprintf(buffer, sizeof(buffer),"\nWebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());

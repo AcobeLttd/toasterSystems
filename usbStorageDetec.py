@@ -1,6 +1,7 @@
 import queue
 import threading
 import subprocess
+import json
 import pyudev
 
 usb_output = queue.Queue()
@@ -17,11 +18,26 @@ usb_information :dict = {
     "debug": None
 }
 
+def send_json():
+    global usb_information
+    json_to_send = json.dumps(usb_information)
+    usb_output.put(json_to_send)
+
+def write_debug(message :str):
+    usb_information["debug"] = message
+
+def write_device(message :str):
+    usb_information["device"] = message
+
+def write_partition(message :str):
+    usb_information["partition"] = message
+
+
 def debug_the_things(device):
     if device.get("DEVTYPE") == "disk":
-         usb_information["device"]=device.device_node
-    elif device.get("DEVTYPE") == "parttion":
-        usb_information["partition"]=device.device_node
+         write_device(device.device_node)
+    elif device.get("DEVTYPE") == "partition":
+        write_partition(device.device_node)
     else:
         print(f"wtf is this device.")
     print(
@@ -37,24 +53,22 @@ def debug_the_things(device):
 def mount_drive(path_to_device :str):
     try:
         subprocess.run(["sudo", "-n", "./scripts/mountThings.sh", path_to_device, path_to_mount_point], check=True)
-        usb_output.put(f"attempting to mount {path_to_device} to {path_to_mount_point}")
+        write_debug(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         print(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         return True
     except subprocess.CalledProcessError as e:
-        usb_output.put(f"something went wrong: {e}")
+        write_debug(f"something went wrong: {e}")
         return False
 
 def umount_drive():
     try:
         subprocess.run(["sudo", "-n", "./scripts/umountThings.sh", path_to_mount_point], check=True)
-        usb_output.put(f"attempting to unmount from {path_to_mount_point}")
+        write_debug(f"attempting to unmount from {path_to_mount_point}")
         print(f"attempting to unmount from {path_to_mount_point}")
         return True
     except subprocess.CalledProcessError as e:
-        usb_output.put(f"something went wrong: {e}")
+        write_debug(f"something went wrong: {e}")
         return False
-
-# def check_if_partiton(device):
 
 
 def handle_event(device=None) -> None:
