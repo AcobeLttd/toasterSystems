@@ -231,13 +231,13 @@ def playthe_video(path_to_video: str) -> None:
 
 
     try:
-        print(f"FRAME_SIZE={FRAME_SIZE}, len(data)={len(data)}")
-        print(f"FFmpeg process={process.pid}")
         while not stop_event.is_set():
-            print(f"FRAME_SIZE={FRAME_SIZE}, len(data)={len(data)}")
-            print(f"FFmpeg process={process.pid}")
+            
 
             data = bytearray()
+            
+            print(f"FRAME_SIZE={FRAME_SIZE}, len(data)={len(data)}")
+            print(f"FFmpeg process={process.pid}")
 
             while len(data) < FRAME_SIZE:
                 if process.poll() is not None:
