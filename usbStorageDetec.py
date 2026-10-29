@@ -20,8 +20,7 @@ usb_information :dict = {
 
 def send_json():
     global usb_information
-    json_to_send = json.dumps(usb_information)
-    usb_output.put(json_to_send)
+    usb_output.put(usb_information)
 
 def write_debug(message :str):
     usb_information["debug"] = message
