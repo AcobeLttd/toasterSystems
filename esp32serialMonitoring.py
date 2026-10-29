@@ -20,11 +20,11 @@ pastTime :float= 0
 
 def shutdown() -> None:
     try:
-        ser.write(b"Shutdown Recieved\n")
+        ser.write(b"Shutdown Recieved. Shutting down in 10 secs.\n")
         time.sleep(10)
         ser.write(b"Shutting down\n")
         print("Python effective UID:", os.geteuid())
-        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"])
+        subprocess.run(["sudo", "-n", "./scripts/ShutdownScript.sh"], check=True)
     except subprocess.CalledProcessError:
         print("Failed to run shutdown command.")
 
@@ -35,8 +35,20 @@ def sendPong() -> None:
     except Exception as e:
         print(f"Error sending pong: {e}")
 
+def reboot() -> None:
+    try:
+        ser.write(b"Reboot Recieved. Rebooting in 10\n")
+        time.sleep(10)
+        ser.write(b"Rebooting\n")
+        print("Python effective UID:", os.geteuid())
+        subprocess.run(["sudo", "-n", "./scripts/rebootScript.sh"], check=True)
+    except subprocess.CalledProcessError:
+        print("Failed to run shutdown command.")
+
+
 commands = {
     "shutdown": shutdown,
+    "reboot": reboot,
     "ping": sendPong
 }
 
