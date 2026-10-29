@@ -1,7 +1,7 @@
 import subprocess
 import threading
 import queue
-import tempfile
+from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -188,7 +188,7 @@ def display_the_image(path_to_image):
     global current_image_path
     current_image_path = path_to_image
     
-    if isImage(current_image_path) is not True:
+    if not isImage(current_image_path):
         print(f"Error executing. {current_image_path} is either corrupted or not an image")
         matrix_output.put(f"Error executing. {current_image_path} is either corrupted or not an image")
         return False
@@ -222,9 +222,13 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
+
+    if not path_to_video.is_file():
+        print(f"{path_to_video} does not exist.")
+        matrix_output.put(f"{path_to_video} does not exist.")
     
     
-    if ffmpeg_decode(path_to_video) is not True:
+    if not ffmpeg_decode(path_to_video):
         print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
         matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
         return
@@ -238,16 +242,9 @@ def playthe_video(path_to_video: str) -> None:
             while len(data) < FRAME_SIZE:
                 chunk = process.stdout.read(FRAME_SIZE - len(data))
                 if not chunk:
-                    # EOF: FFmpeg closed stdout or exited.
                     rc = process.wait()
-
                     if rc != 0:
                         print(f"FFmpeg failed with exit code {rc}")
-                    else:
-                        print("FFmpeg finished successfully")
-
-                    break
-                if not chunk:
                     break
                 data.extend(chunk)
 
