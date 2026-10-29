@@ -273,6 +273,7 @@ def start(path_to_video: str) -> threading.Thread:
     if not Path(path_to_video).is_file():
         print(f"{path_to_video} does not exist.")
         matrix_output.put(f"{path_to_video} does not exist.")
+        default()
         return False
     image = Image.new("RGB", (64, 32), (0, 0, 0))
     displayBlendImage(image);
