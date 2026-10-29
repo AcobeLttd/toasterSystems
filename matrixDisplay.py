@@ -1,6 +1,7 @@
 import subprocess
 import threading
 import queue
+import tempfile
 from PIL import Image, UnidentifiedImageError
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
@@ -159,6 +160,7 @@ def ffmpeg_decode(path_to_video: str):
 
     detect_and_stop_ffmpeg()
 
+
     try:
         process = subprocess.Popen(
             cmd,
@@ -234,6 +236,10 @@ def playthe_video(path_to_video: str) -> None:
             data = bytearray()
 
             while len(data) < FRAME_SIZE:
+                if process.poll() is not None:
+                    if process.returncode != 0:
+                        matrix_output(f"FFmpeg failed with exit code {process.returncode}")
+
                 chunk = process.stdout.read(FRAME_SIZE - len(data))
                 if not chunk:
                     break
