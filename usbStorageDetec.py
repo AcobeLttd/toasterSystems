@@ -58,6 +58,7 @@ def mount_drive(path_to_device :str):
         write_debug(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         print(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         return True
+        
     except subprocess.CalledProcessError as e:
         write_debug(f"something went wrong: {e}")
         return False
