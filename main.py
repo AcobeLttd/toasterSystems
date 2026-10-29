@@ -63,6 +63,14 @@ def shutdownPrint() -> None:
     print("Shutting down, bye bye!")
     pass
 
+def rebootPrint() -> None:
+    print("Reboot Recieved\n")
+    matrixDisplay.shutdown()
+    time.sleep(10)
+    print("Python effective UID:", os.geteuid())
+    print("Rebooting, bye bye!")
+    pass
+
 def stopMatrixVideo(placeholder :str) -> None:
     global matrix_thread
 
@@ -189,6 +197,7 @@ usb_commands :dict = {
 
 commands :dict = {
     "shutdown": shutdownPrint,
+    "reboot" : rebootPrint,
     "matrix": matrixFunctions,
     "usb": usbFunctions,
     "Waiting for ESP32...": lambda: None  
