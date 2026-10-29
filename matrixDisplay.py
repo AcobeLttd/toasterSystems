@@ -247,6 +247,8 @@ def playthe_video(path_to_video: str) -> None:
         matrix_output.put("Force killing FFmpeg")
         process.kill()
         process.wait()
+        matrix_output.put("Fading to default")
+        default()
 
 
 def start(path_to_video: str) -> threading.Thread:

@@ -57,6 +57,7 @@ def mount_drive(path_to_device :str):
         subprocess.run(["sudo", "-n", "./scripts/mountThings.sh", path_to_device, path_to_mount_point], check=True)
         write_debug(f"attempting to mount {path_to_device} to {path_to_mount_point}")
         print(f"attempting to mount {path_to_device} to {path_to_mount_point}")
+        write_debug(f"Mounted {path_to_device} to /media/usb-drive")
         return True
         
     except subprocess.CalledProcessError as e:
@@ -68,6 +69,7 @@ def umount_drive():
         subprocess.run(["sudo", "-n", "./scripts/umountThings.sh", path_to_mount_point], check=True)
         write_debug(f"attempting to unmount from {path_to_mount_point}")
         print(f"attempting to unmount from {path_to_mount_point}")
+        write_debug(f"Unmounted /media/usb-drive")
         return True
     except subprocess.CalledProcessError as e:
         write_debug(f"something went wrong: {e}")
