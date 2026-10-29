@@ -226,12 +226,6 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
-
-    if not Path(path_to_video).is_file():
-        print(f"{path_to_video} does not exist.")
-        matrix_output.put(f"{path_to_video} does not exist.")
-        stop_playing()
-        return False
     
     
     if not ffmpeg_decode(path_to_video):
@@ -276,6 +270,10 @@ def playthe_video(path_to_video: str) -> None:
 def start(path_to_video: str) -> threading.Thread:
     stop_the_thread()
     resetBrightness()
+    if not Path(path_to_video).is_file():
+        print(f"{path_to_video} does not exist.")
+        matrix_output.put(f"{path_to_video} does not exist.")
+        return False
     image = Image.new("RGB", (64, 32), (0, 0, 0))
     displayBlendImage(image);
     stop_event.clear()
