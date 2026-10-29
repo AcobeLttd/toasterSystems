@@ -183,6 +183,10 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
+    if not Path(path_to_image).is_file():
+        print(f"{path_to_image} does not exist.")
+        matrix_output.put(f"{path_to_image} does not exist.")
+        return False
     resetBrightness()
     stop_the_thread()
     global current_image_path
@@ -223,9 +227,10 @@ def playthe_video(path_to_video: str) -> None:
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
 
-    if not path_to_video.is_file():
+    if not Path(path_to_video).is_file():
         print(f"{path_to_video} does not exist.")
         matrix_output.put(f"{path_to_video} does not exist.")
+        return False
     
     
     if not ffmpeg_decode(path_to_video):
