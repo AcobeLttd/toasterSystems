@@ -25,12 +25,15 @@ def send_json():
 
 def write_debug(message :str):
     usb_information["debug"] = message
+    send_json()
 
 def write_device(message :str):
     usb_information["device"] = message
+    send_json()
 
 def write_partition(message :str):
     usb_information["partition"] = message
+    send_json()
 
 
 def debug_the_things(device):
@@ -85,13 +88,13 @@ def handle_event(device=None) -> None:
                 path = device.device_node
 
                 if action == "add":
-                    usb_output.put(f"USB storage device added: {path}")
+                    write_debug(f"USB storage device added: {path}")
                     print(f"USB storage device added: {path}")
                 elif action == "remove":
-                    usb_output.put(f"USB storage device removed: {path}")
+                    write_debug(f"USB storage device removed: {path}")
                     print(f"USB storage device removed: {path}")
                     umount_drive()
-                    usb_output.put(f"USB storage device unmounted: {path}")
+                    write_debug(f"USB storage device unmounted: {path}")
                     print(f"USB storage device unmounted: {path}")
             except (OSError, AttributeError) as e:
                 print(f"Error processing device event: {e}")
@@ -100,7 +103,7 @@ def handle_event(device=None) -> None:
 
 def start() -> threading.Thread:
     thread = threading.Thread(target=handle_event, daemon=False)
-    usb_output.put("usbStorage Detec thread started.")
+    write_debug("usbStorage Detec thread started.")
     print("usbStorage Detec thread started.")
     thread.start()
     return thread
