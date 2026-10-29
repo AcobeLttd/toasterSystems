@@ -239,6 +239,10 @@ def playthe_video(path_to_video: str) -> None:
                 if process.poll() is not None:
                     if process.returncode != 0:
                         matrix_output(f"FFmpeg failed with exit code {process.returncode}")
+                    else:
+                        print("ffmpeg did something1")
+                else:
+                    print("ffmped did something 2")
 
                 chunk = process.stdout.read(FRAME_SIZE - len(data))
                 if not chunk:
@@ -261,7 +265,6 @@ def playthe_video(path_to_video: str) -> None:
         matrix_output.put("Force killing FFmpeg")
         process.kill()
         process.wait()
-        matrix_output.put("Fading to default")
 
 
 def start(path_to_video: str) -> threading.Thread:
