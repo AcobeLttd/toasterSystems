@@ -38,6 +38,7 @@ def shutdown():
     
     #shutdown animation or something idfk
 def sleep_picture():
+    stop_the_thread()
     adjustBrightness(sleep_brightness)
     image = Image.open("./test-media/eepyDeepy.png").convert("RGB")
     image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
@@ -106,7 +107,7 @@ def initMatrix() -> None:
 
 def resetBrightness() -> None:
     global current_brightness
-    adjustBrightness(current_brightness)
+    setBrightness(current_brightness)
 
 def adjustBrightness(brightness: int) -> None:
     global current_brightness
