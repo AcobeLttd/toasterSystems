@@ -242,9 +242,7 @@ def playthe_video(path_to_video: str) -> None:
                     rc = process.wait()
 
                     if rc != 0:
-                        matrix_output(
-                            f"FFmpeg failed with exit code {rc}"
-                        )
+                        print(f"FFmpeg failed with exit code {rc}")
                     else:
                         print("FFmpeg finished successfully")
 
