@@ -232,6 +232,7 @@ def playthe_video(path_to_video: str) -> None:
 
 
 def start(path_to_video: str) -> threading.Thread:
+    stop_the_thread()
     image = Image.new("RGB", (64, 32), (0, 0, 0))
     displayBlendImage(image);
     print(f"Starting video playback thread for: {path_to_video}")
