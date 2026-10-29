@@ -220,7 +220,6 @@ def playthe_video(path_to_video: str) -> None:
 
  
     finally:
-        matrix_output.put("Fading last image.")
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
 
@@ -233,9 +232,9 @@ def playthe_video(path_to_video: str) -> None:
 
 def start(path_to_video: str) -> threading.Thread:
     stop_the_thread()
-    stop_event.clear()
     image = Image.new("RGB", (64, 32), (0, 0, 0))
     displayBlendImage(image);
+    stop_event.clear()
     print(f"Starting video playback thread for: {path_to_video}")
     matrix_output.put(f"Starting video playback thread for: {path_to_video}")
     thread_matrix = threading.Thread(target=playthe_video, args=(path_to_video,), daemon=False)
