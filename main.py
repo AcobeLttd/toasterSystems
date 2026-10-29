@@ -65,7 +65,7 @@ def shutdownPrint() -> None:
 
 def rebootPrint() -> None:
     print("Reboot Recieved\n")
-    matrixDisplay.shutdown()
+    matrixDisplay.reboot()
     time.sleep(10)
     print("Python effective UID:", os.geteuid())
     print("Rebooting, bye bye!")

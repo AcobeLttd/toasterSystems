@@ -37,6 +37,14 @@ def shutdown():
 
     
     #shutdown animation or something idfk
+def reboot():
+    stop_event.set()
+    global matrix
+    image = Image.open("./test-media/reboot.png").convert("RGB")
+    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+    displayBlendImage(image)
+
+
 def sleep_picture():
     stop_the_thread()
     setBrightness(sleep_brightness)
