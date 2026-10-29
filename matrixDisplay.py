@@ -230,6 +230,7 @@ def playthe_video(path_to_video: str) -> None:
     if not Path(path_to_video).is_file():
         print(f"{path_to_video} does not exist.")
         matrix_output.put(f"{path_to_video} does not exist.")
+        stop_playing()
         return False
     
     
