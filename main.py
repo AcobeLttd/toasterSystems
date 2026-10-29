@@ -80,6 +80,8 @@ def stopMatrixVideo(placeholder :str) -> None:
 
     matrixDisplay.stop_playing()
 
+    matrixDisplay.default()
+
     if matrix_thread is not None:
 
         matrix_thread.join(timeout=3)
