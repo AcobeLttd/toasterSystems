@@ -75,6 +75,7 @@ def displayBlendImage(new :Image.Image):
         display_on_both(final_image)
 
 def default():
+    resetBrightness()
     global current_image_path
     global current_frame
 
@@ -171,6 +172,7 @@ def isImage(filePath: str) -> bool:
         return False
 
 def display_the_image(path_to_image):
+    resetBrightness()
     stop_the_thread()
     global current_image_path
     current_image_path = path_to_image
@@ -248,6 +250,7 @@ def playthe_video(path_to_video: str) -> None:
 
 def start(path_to_video: str) -> threading.Thread:
     stop_the_thread()
+    resetBrightness()
     image = Image.new("RGB", (64, 32), (0, 0, 0))
     displayBlendImage(image);
     stop_event.clear()
