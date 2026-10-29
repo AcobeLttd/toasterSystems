@@ -94,7 +94,7 @@ def initMatrix() -> None:
     options.chain_length = 2
     options.parallel = 1
     options.hardware_mapping = "regular"
-    options.brightness = default_brightness
+    options.brightness = current_brightness
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
