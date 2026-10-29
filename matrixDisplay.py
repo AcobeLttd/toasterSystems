@@ -232,23 +232,23 @@ def playthe_video(path_to_video: str) -> None:
 
     try:
         while not stop_event.is_set():
-            
 
             data = bytearray()
-            
-            print(f"FRAME_SIZE={FRAME_SIZE}, len(data)={len(data)}")
-            print(f"FFmpeg process={process.pid}")
 
             while len(data) < FRAME_SIZE:
-                if process.poll() is not None:
-                    if process.returncode != 0:
-                        matrix_output(f"FFmpeg failed with exit code {process.returncode}")
-                    else:
-                        print("ffmpeg did something1")
-                else:
-                    print("ffmped did something 2")
-
                 chunk = process.stdout.read(FRAME_SIZE - len(data))
+                if not chunk:
+                    # EOF: FFmpeg closed stdout or exited.
+                    rc = process.wait()
+
+                    if rc != 0:
+                        matrix_output(
+                            f"FFmpeg failed with exit code {rc}"
+                        )
+                    else:
+                        print("FFmpeg finished successfully")
+
+                    break
                 if not chunk:
                     break
                 data.extend(chunk)
@@ -269,6 +269,7 @@ def playthe_video(path_to_video: str) -> None:
         matrix_output.put("Force killing FFmpeg")
         process.kill()
         process.wait()
+        matrix_output.put("Fading to default")
 
 
 def start(path_to_video: str) -> threading.Thread:
