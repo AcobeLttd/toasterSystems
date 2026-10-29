@@ -86,6 +86,7 @@ void initJSON() {
   globalJson["lastMessage"] = 0;
   globalJson["matrix"] = 0;
   globalJson["rpiDebug"] = 0;
+  globalJson["usb"]= 0 ;
 }
 
 
@@ -122,8 +123,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
              void *arg, uint8_t *data, size_t len) {
   char buffer[128];
-  switch (type) {'
-  '
+  switch (type) {
     case WS_EVT_CONNECT:
       
       snprintf(buffer, sizeof(buffer),"\nWebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
@@ -205,7 +205,7 @@ String readSerial() {
 }
 
 void debugSend(String debugMessage) {
-  char buffer[128];
+  char buffer[256];
   unsigned long seconds = millis() / 1000;
 
   unsigned long hours = seconds / 3600;
@@ -303,6 +303,7 @@ void decodeRpiJson(const uint8_t* data, size_t len){
   }
   globalJson["matrix"] = doc["matrix"];
   globalJson["rpiDebug"] = doc["main_debug"];
+  globalJson["usb"] = doc["usb"];
 
 }
 

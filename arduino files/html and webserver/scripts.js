@@ -44,6 +44,10 @@ function makeTerminal(elementID, maxLines = 200) {
 const terminalThing = makeTerminal("terminal");
 const matrixStatus = makeTerminal("matrixStatus");
 const rpiStatus = makeTerminal("rpiDebug");
+const usbDevice = makeTerminal("usb_device");
+const usbPartition = makeTerminal("partition_detect");
+const usbStatus = makeTerminal("usb_debug");
+
 
 window.addEventListener('load', onLoad);
 
@@ -67,15 +71,24 @@ function onLoad(event) {
     initWebSocket();
     initButtons();
     initTextInputs();
+    initTerminals();
+}
 
+function initTerminals(){
     terminalThing.init();
     matrixStatus.init();
     rpiStatus.init();
+    usbPartition.init();
+    usbDevice.init();
+    usbStatus.init();
 }
+
 function initButtons() {
     document.getElementById('button').addEventListener('click', playBadApple);
     document.getElementById('button1').addEventListener('click', stopMatrix);
     document.getElementById('shutdown').addEventListener('click', shutdown);
+    document.getElementById('reboot').addEventListener('click', reboot);
+    document.getElementById('eepy').addEventListener('click', eepyDeepy);
     document.getElementById('displayImage').addEventListener('click', displayImage);
 }
 function initTextInputs() {
@@ -94,13 +107,20 @@ function sendSerial(event) {
     input.value = "";
 }
 
+function terminals(parsedData){
+    terminalThing.addMessage(parsedData.debug);
+    matrixStatus.addMessage(parsedData.matrix);
+    rpiStatus.addMessage(parsedData.rpiDebug);
+    usbPartition.addMessage(parsedData.usb.partition);
+    usbDevice.addMessage(parsedData.usb.device);
+    usbStatus.addMessage(parsedData.usb.debug);
+}
+
 // Function under here replaces all the placeholder values for the html code with actual values sent from the ESP32 via json.
 function onMessage(event) {
     const thingThing = JSON.parse(event.data);
 
-    terminalThing.addMessage(thingThing.debug);
-    matrixStatus.addMessage(thingThing.matrix);
-    rpiStatus.addMessage(thingThing.rpiDebug);
+    terminals(thingThing);
 
     document.getElementById('lastMessage').innerText = thingThing.lastMessage + " secs";
     console.log('Data Recieved lastMessage: ', thingThing.lastMessage);
@@ -133,12 +153,20 @@ function onMessage(event) {
 
 function getPathForVideo() {
     const input = document.getElementById('videoPath');
+    if (input.value === "") {
+        input.value = "./test-media/theAppleThatIsBad.mp4"
+        document.getElementById('videoPath').value = "./test-media/theAppleThatIsBad.mp4"
+    }
     const command = input.value.trim();
     return command;
 }
 
 function getPathForImage() {
     const input = document.getElementById('imagePath');
+    if (input.value === "") {
+        input.value = "./test-media/actualPNGtest.png"
+        document.getElementById('videoPath').value = "./test-media/actualPNGtest.png"
+    }
     const command = input.value.trim();
     return command;
 }
@@ -165,6 +193,16 @@ function stopMatrix() {
 function shutdown() {
     const command = "shutdown";
     sendCommands(command);
+}
+
+function reboot() {
+    const command = "reboot";
+    sendCommands(command);
+}
+
+function eepyDeepy() {
+    const command = "matrix|sleep";
+    sendCommands(command)
 }
 
 function sendCommands(command) {
