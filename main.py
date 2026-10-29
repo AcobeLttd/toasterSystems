@@ -100,6 +100,9 @@ def playMatrixVideo(path_to_video :str) -> None:
         print(f"Error playing video '{path_to_video}': {e}")
         main_debug(f"Error playing video '{path_to_video}': {e}")
 
+def matrixSleep(egg) -> None:
+    matrixDisplay.sleep_picture()
+
 def matrixBrightness(brightness :str) -> None:
     try:
         int_bright = int(brightness)
@@ -175,7 +178,8 @@ matrix_commands :dict = {
     "brightness": matrixBrightness,
     "br": matrixBrightness,
     "stop": stopMatrixVideo,
-    "display": displayImage
+    "display": displayImage,
+    "sleep": matrixSleep
 }
 
 usb_commands :dict = {

@@ -6,7 +6,9 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 
 stop_event = threading.Event()
 
-default_brightness :int=60
+current_brightness :int=100
+
+sleep_brightness :int = 20
 
 matrix_output = queue.Queue()
 
@@ -35,6 +37,12 @@ def shutdown():
 
     
     #shutdown animation or something idfk
+def sleep_picture():
+    adjustBrightness(sleep_brightness)
+    image = Image.open("./test-media/eepyDeepy.png").convert("RGB")
+    image = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
+    displayBlendImage(image)
+
 
 def stop_the_thread():
     global thread_matrix
@@ -95,8 +103,16 @@ def initMatrix() -> None:
     
     default()
 
+def resetBrightness() -> None:
+    global current_brightness
+    adjustBrightness(current_brightness)
 
 def adjustBrightness(brightness: int) -> None:
+    global current_brightness
+    current_brightness = brightness
+    setBrightness(current_brightness)
+
+def setBrightness(brightness: int) -> None:
     global matrix
     brightness = max(0, min(100, brightness))
     print(f"recieved in matrix code {brightness}")
