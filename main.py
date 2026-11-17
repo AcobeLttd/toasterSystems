@@ -5,7 +5,7 @@ import esp32serialMonitoring
 import matrixDisplay
 import usbStorageDetec
 import os
-
+print("Joemama 69")
 g: int= 0
 
 
