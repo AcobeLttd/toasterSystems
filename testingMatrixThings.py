@@ -247,12 +247,13 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
+    frame = Image.open("./test-media/horrifying.png").convert("RGB")
     
     
-    if not ffmpeg_decode(path_to_video):
-        print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
-        matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
-        return
+    #if not ffmpeg_decode(path_to_video):
+    #    print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+    #    matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+    #    return
 
 
     try:
@@ -274,7 +275,6 @@ def playthe_video(path_to_video: str) -> None:
             #    break 
 
             #frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-            frame = Image.open("./test-media/horrifying.png").convert("RGB")
 
             display_on_both(frame)
 
