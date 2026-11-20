@@ -24,11 +24,43 @@ current_image_path = "./test-media/blåhaj.png"
 
 process = None
 
+cmd = [
+        "ffmpeg",
+        "-hide_banner", "-loglevel", "error",
+        "-re",
+        "-i", path_to_video,
+        "-an",
+        "-vf", "scale=64:32:flags=bicubic,fps=60",
+        "-pix_fmt", "rgb24",
+        "-f", "rawvideo",
+        "pipe:1",
+    ]
+
 
 
 WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
+
+def initMatrix() -> None:
+    global matrix
+    global offscreen
+    global display_image
+
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 2
+    options.parallel = 1
+    options.hardware_mapping = "regular"
+    options.brightness = current_brightness
+
+    matrix = RGBMatrix(options=options)
+    offscreen = matrix.CreateFrameCanvas()
+    
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+    
+    default()
 
 def shutdown():
     stop_event.set()
@@ -95,25 +127,7 @@ def default():
 
     displayBlendImage(image)
 
-def initMatrix() -> None:
-    global matrix
-    global offscreen
-    global display_image
 
-    options = RGBMatrixOptions()
-    options.rows = 32
-    options.cols = 64
-    options.chain_length = 2
-    options.parallel = 1
-    options.hardware_mapping = "regular"
-    options.brightness = current_brightness
-
-    matrix = RGBMatrix(options=options)
-    offscreen = matrix.CreateFrameCanvas()
-    
-    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-    
-    default()
 
 def resetBrightness() -> None:
     global current_brightness
@@ -147,17 +161,7 @@ def ffmpeg_decode(path_to_video: str):
         matrix_output.put(f"Running stop command. {path_to_video} is either corrupted or not a video")
         return False
     global process
-    cmd = [
-        "ffmpeg",
-        "-hide_banner", "-loglevel", "error",
-        "-re",
-        "-i", path_to_video,
-        "-an",
-        "-vf", "scale=64:32:flags=bicubic,fps=60",
-        "-pix_fmt", "rgb24",
-        "-f", "rawvideo",
-        "pipe:1",
-    ]
+    
 
     detect_and_stop_ffmpeg()
 
