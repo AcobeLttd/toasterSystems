@@ -257,38 +257,41 @@ def playthe_video(path_to_video: str) -> None:
 
     try:
         while not stop_event.is_set():
-            read_start = time.monotonic()
+            #read_start = time.monotonic()
 
-            data = bytearray()
+            #data = bytearray()
 
-            while len(data) < FRAME_SIZE:
-                chunk = process.stdout.read(FRAME_SIZE - len(data))
-                if not chunk:
-                    rc = process.wait()
-                    if rc != 0:
-                        print(f"FFmpeg failed with exit code {rc}")
-                    break
-                data.extend(chunk)
+            #while len(data) < FRAME_SIZE:
+            #    chunk = process.stdout.read(FRAME_SIZE - len(data))
+            #    if not chunk:
+            #        rc = process.wait()
+            #        if rc != 0:
+            #            print(f"FFmpeg failed with exit code {rc}")
+            #        break
+            #    data.extend(chunk)
 
-            if len(data) != FRAME_SIZE:
-                break 
+            #if len(data) != FRAME_SIZE:
+            #    break 
 
-            frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-            display_on_both(frame)
-
-            read_time = time.monotonic() - read_start
-
-            display_start = time.monotonic()
+            #frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
+            frame = Image.open("./test-media/horrifying.png").convert("RGB")
 
             display_on_both(frame)
 
-            display_time = time.monotonic() - display_start
 
-            if read_time > 0.020 or display_time > 0.010:
-                print(
-                    f"Read: {read_time * 1000:.1f} ms | "
-                    f"Display: {display_time * 1000:.1f} ms"
-                )
+            #read_time = time.monotonic() - read_start
+
+            #display_start = time.monotonic()
+
+            #display_on_both(frame)
+
+            #display_time = time.monotonic() - display_start
+
+            #if read_time > 0.020 or display_time > 0.010:
+            #    print(
+            #        f"Read: {read_time * 1000:.1f} ms | "
+            #        f"Display: {display_time * 1000:.1f} ms"
+            #    )
     finally:
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
@@ -321,4 +324,4 @@ def start(path_to_video: str) -> threading.Thread:
 if __name__ == "__main__":
     initMatrix()
     video_path = "./test-media/theAppleThatIsBad.mp4"
-    start(video_path)
+    playthe_video(video_path)
