@@ -215,9 +215,16 @@ def display_on_both(frames :Image.Image):
     display_image.paste(frames, (64, 0))
     mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
     display_image.paste(mirrored, (0, 0))
-    
+
+    start = time.monotonic()
+
     offscreen.SetImage(display_image)
     offscreen = matrix.SwapOnVSync(offscreen)
+
+    elapsed = time.monotonic() - start
+
+    if elapsed > 0.020:
+        print(f"Display update took {elapsed * 1000:.1f} ms")
 
 
 def playthe_video(path_to_video: str) -> None:
