@@ -32,6 +32,25 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
+def initMatrix() -> None:
+    global matrix
+    global offscreen
+    global display_image
+
+    options = RGBMatrixOptions()
+    options.rows = 32
+    options.cols = 64
+    options.chain_length = 2
+    options.parallel = 1
+    options.hardware_mapping = "regular"
+    options.brightness = current_brightness
+
+    matrix = RGBMatrix(options=options)
+    offscreen = matrix.CreateFrameCanvas()
+    
+    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
+    
+    default()
 
 
 def shutdown():
