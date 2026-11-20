@@ -1,6 +1,7 @@
 import subprocess
 import threading
 import queue
+import time
 from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
