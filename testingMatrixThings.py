@@ -256,6 +256,7 @@ def playthe_video(path_to_video: str) -> None:
 
 
     try:
+        frame_counter = 0
         while not stop_event.is_set():
             read_start = time.monotonic()
 
@@ -279,9 +280,11 @@ def playthe_video(path_to_video: str) -> None:
                 (WIDTH, HEIGHT),
                 bytes(data)
             )
+            frame_counter += 1
 
             display_start = time.monotonic()
-            display_on_both(frame)
+            if frame_counter % 5 == 0:
+                display_on_both(frame)
             display_time = time.monotonic() - display_start
 
             if read_time > 0.020 or display_time > 0.010:
