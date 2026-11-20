@@ -44,8 +44,8 @@ def initMatrix() -> None:
     options.parallel = 1
     options.hardware_mapping = "regular"
     options.brightness = current_brightness
-    options.pwm_bits = 7
-    options.pwm_lsb_nanoseconds = 100
+    options.pwm_bits = 8
+    options.pwm_lsb_nanoseconds = 150
 
     matrix = RGBMatrix(options=options)
     offscreen = matrix.CreateFrameCanvas()
