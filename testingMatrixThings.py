@@ -243,6 +243,7 @@ def playthe_video(path_to_video: str) -> None:
 
     try:
         while not stop_event.is_set():
+            read_start = time.monotonic()
 
             data = bytearray()
 
@@ -260,6 +261,7 @@ def playthe_video(path_to_video: str) -> None:
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
             display_on_both(frame)
+
             read_time = time.monotonic() - read_start
 
             display_start = time.monotonic()
