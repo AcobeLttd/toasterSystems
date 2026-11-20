@@ -24,17 +24,7 @@ current_image_path = "./test-media/blåhaj.png"
 
 process = None
 
-cmd = [
-        "ffmpeg",
-        "-hide_banner", "-loglevel", "error",
-        "-re",
-        "-i", path_to_video,
-        "-an",
-        "-vf", "scale=64:32:flags=bicubic,fps=60",
-        "-pix_fmt", "rgb24",
-        "-f", "rawvideo",
-        "pipe:1",
-    ]
+
 
 
 
@@ -143,6 +133,17 @@ def ffmpeg_decode(path_to_video: str):
         matrix_output.put(f"Running stop command. {path_to_video} is either corrupted or not a video")
         return False
     global process
+    cmd = [
+        "ffmpeg",
+        "-hide_banner", "-loglevel", "error",
+        "-re",
+        "-i", path_to_video,
+        "-an",
+        "-vf", "scale=64:32:flags=bicubic,fps=60",
+        "-pix_fmt", "rgb24",
+        "-f", "rawvideo",
+        "pipe:1",
+    ]
     
 
     detect_and_stop_ffmpeg()
