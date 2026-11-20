@@ -158,7 +158,7 @@ def ffmpeg_decode(path_to_video: str):
         "-re",
         "-i", path_to_video,
         "-an",
-        "-vf", "scale=64:32:flags=bicubic,fps=60",
+        "-vf", "scale=64:32:flags=bicubic,fps=40",
         "-pix_fmt", "rgb24",
         "-f", "rawvideo",
         "pipe:1",
