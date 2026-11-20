@@ -222,9 +222,8 @@ def display_on_both(frames :Image.Image):
     offscreen = matrix.SwapOnVSync(offscreen)
 
     elapsed = time.monotonic() - start
-
-    if elapsed > 0.020:
-        print(f"Display update took {elapsed * 1000:.1f} ms")
+    
+    print(f"Display update took {elapsed * 1000:.1f} ms")
 
 
 def playthe_video(path_to_video: str) -> None:
