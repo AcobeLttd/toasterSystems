@@ -217,13 +217,18 @@ def display_on_both(frames :Image.Image):
     display_image.paste(mirrored, (0, 0))
 
     start = time.monotonic()
-
     offscreen.SetImage(display_image)
-    offscreen = matrix.SwapOnVSync(offscreen)
+    setimage_time = time.monotonic() - start
 
-    elapsed = time.monotonic() - start
-    
-    print(f"Display update took {elapsed * 1000:.1f} ms")
+    start = time.monotonic()
+    offscreen = matrix.SwapOnVSync(offscreen)
+    swap_time = time.monotonic() - start
+
+    if swap_time > 0.008 or setimage_time > 0.008:
+        print(
+            f"SetImage: {setimage_time * 1000:.2f} ms | "
+            f"Swap: {swap_time * 1000:.2f} ms"
+        )
 
 
 def playthe_video(path_to_video: str) -> None:
