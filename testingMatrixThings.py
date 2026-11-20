@@ -42,25 +42,7 @@ WIDTH, HEIGHT = 64, 32
 FPS = 60
 FRAME_SIZE = WIDTH * HEIGHT * 3
 
-def initMatrix() -> None:
-    global matrix
-    global offscreen
-    global display_image
 
-    options = RGBMatrixOptions()
-    options.rows = 32
-    options.cols = 64
-    options.chain_length = 2
-    options.parallel = 1
-    options.hardware_mapping = "regular"
-    options.brightness = current_brightness
-
-    matrix = RGBMatrix(options=options)
-    offscreen = matrix.CreateFrameCanvas()
-    
-    display_image = Image.new("RGB", (128, 32), (0, 0, 0))
-    
-    default()
 
 def shutdown():
     stop_event.set()
@@ -215,25 +197,28 @@ def display_on_both(frames :Image.Image):
     global display_image
     global current_frame
     current_frame = frames
+
+
+    offscreen.SetImage(current_frame)
     
-    display_image.paste(frames, (64, 0))
-    mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-    display_image.paste(mirrored, (0, 0))
 
-    start = time.monotonic()
-    offscreen.SetImage(display_image)
-    setimage_time = time.monotonic() - start
-
-    start = time.monotonic()
     offscreen = matrix.SwapOnVSync(offscreen)
-    swap_time = time.monotonic() - start
 
-    if swap_time > 0.008 or setimage_time > 0.008:
-        print(
-            f"SetImage: {setimage_time * 1000:.2f} ms | "
-            f"Swap: {swap_time * 1000:.2f} ms"
-        )
+    
+    
+    #display_image.paste(frames, (64, 0))
+    #mirrored = frames.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    #display_image.paste(mirrored, (0, 0))
 
+    #start = time.monotonic()
+    #offscreen.SetImage(display_image)
+    #setimage_time = time.monotonic() - start
+
+    #start = time.monotonic()
+    #offscreen = matrix.SwapOnVSync(offscreen)
+    #swap_time = time.monotonic() - start
+
+    
 
 def playthe_video(path_to_video: str) -> None:
     global matrix
