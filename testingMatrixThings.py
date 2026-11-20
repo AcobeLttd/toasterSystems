@@ -275,7 +275,7 @@ def playthe_video(path_to_video: str) -> None:
             #    break 
 
             #frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-
+            time.sleep(0.025)
             display_on_both(frame)
 
 
