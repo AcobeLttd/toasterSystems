@@ -254,7 +254,13 @@ def playthe_video(path_to_video: str) -> None:
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
             display_on_both(frame)
+            now = time.monotonic()
+            if 'last_frame_time' in locals():
+                delta = now - last_frame_time
+                if delta > 0.025:
+                    print(f"Frame delay: {delta * 1000:.1f} ms")
 
+            last_frame_time = now
  
     finally:
         print("Cleaning up FFmpeg")
@@ -287,7 +293,5 @@ def start(path_to_video: str) -> threading.Thread:
 
 if __name__ == "__main__":
     initMatrix()
-    frame = Image.new("RGB", (128, 32), (255, 255, 255))
-    while True:
-        display_on_both(frame)
-        time.sleep(1 / 60)
+    video_path = "./test-media/theAppleThatIsBad.mp4"
+    start(video_path)
