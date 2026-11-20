@@ -260,14 +260,19 @@ def playthe_video(path_to_video: str) -> None:
 
             frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
             display_on_both(frame)
-            now = time.monotonic()
-            if 'last_frame_time' in locals():
-                delta = now - last_frame_time
-                if delta > 0.025:
-                    print(f"Frame delay: {delta * 1000:.1f} ms")
+            read_time = time.monotonic() - read_start
 
-            last_frame_time = now
- 
+            display_start = time.monotonic()
+
+            display_on_both(frame)
+
+            display_time = time.monotonic() - display_start
+
+            if read_time > 0.020 or display_time > 0.010:
+                print(
+                    f"Read: {read_time * 1000:.1f} ms | "
+                    f"Display: {display_time * 1000:.1f} ms"
+                )
     finally:
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
