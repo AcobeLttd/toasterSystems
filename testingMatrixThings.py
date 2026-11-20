@@ -247,52 +247,48 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
-    image = Image.open("./test-media/horrifying.png").convert("RGB")
-    frame = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
     
     
-    #if not ffmpeg_decode(path_to_video):
-    #    print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
-    #    matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
-    #    return
+    if not ffmpeg_decode(path_to_video):
+        print(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+        matrix_output.put(f"problems with ffmpeg. {path_to_video} is not a video or corrupted. or ffmpeg error.")
+        return
 
 
     try:
         while not stop_event.is_set():
-            #read_start = time.monotonic()
+            read_start = time.monotonic()
 
-            #data = bytearray()
+            data = bytearray()
 
-            #while len(data) < FRAME_SIZE:
-            #    chunk = process.stdout.read(FRAME_SIZE - len(data))
-            #    if not chunk:
-            #        rc = process.wait()
-            #        if rc != 0:
-            #            print(f"FFmpeg failed with exit code {rc}")
-            #        break
-            #    data.extend(chunk)
+            while len(data) < FRAME_SIZE:
+                chunk = process.stdout.read(FRAME_SIZE - len(data))
 
-            #if len(data) != FRAME_SIZE:
-            #    break 
+                if not chunk:
+                    break
 
-            #frame = Image.frombytes("RGB", (WIDTH, HEIGHT), bytes(data))
-            time.sleep(0.025)
+                data.extend(chunk)
+
+            if len(data) != FRAME_SIZE:
+                break
+
+            read_time = time.monotonic() - read_start
+
+            frame = Image.frombytes(
+                "RGB",
+                (WIDTH, HEIGHT),
+                bytes(data)
+            )
+
+            display_start = time.monotonic()
             display_on_both(frame)
+            display_time = time.monotonic() - display_start
 
-
-            #read_time = time.monotonic() - read_start
-
-            #display_start = time.monotonic()
-
-            #display_on_both(frame)
-
-            #display_time = time.monotonic() - display_start
-
-            #if read_time > 0.020 or display_time > 0.010:
-            #    print(
-            #        f"Read: {read_time * 1000:.1f} ms | "
-            #        f"Display: {display_time * 1000:.1f} ms"
-            #    )
+            if read_time > 0.020 or display_time > 0.010:
+                print(
+                    f"Read: {read_time * 1000:.1f} ms | "
+                    f"Display: {display_time * 1000:.1f} ms"
+                )
     finally:
         print("Cleaning up FFmpeg")
         matrix_output.put("Cleaning up FFmpeg")
@@ -324,5 +320,5 @@ def start(path_to_video: str) -> threading.Thread:
 
 if __name__ == "__main__":
     initMatrix()
-    video_path = "./test-media/horrifying.png"
+    video_path = "./test-media/theAppleThatIsBad.mp4"
     playthe_video(video_path)
