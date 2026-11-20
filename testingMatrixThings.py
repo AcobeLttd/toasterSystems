@@ -287,11 +287,7 @@ def start(path_to_video: str) -> threading.Thread:
 
 if __name__ == "__main__":
     initMatrix()
+    frame = Image.new("RGB", (128, 32), (80, 80, 80))
     while True:
-        frame = Image.new("RGB", (128, 32), (255, 0, 0))
-        display_on_both(frame)
-        time.sleep(1 / 60)
-
-        frame = Image.new("RGB", (128, 32), (0, 0, 255))
         display_on_both(frame)
         time.sleep(1 / 60)
