@@ -285,6 +285,11 @@ def start(path_to_video: str) -> threading.Thread:
     return thread_matrix
 
 if __name__ == "__main__":
-    initMatrix()
-    video_path = "./test-media/theAppleThatIsBad.mp4"
-    start(video_path)
+    while True:
+        frame = Image.new("RGB", (128, 32), (255, 0, 0))
+        display_on_both(frame)
+        time.sleep(1 / 60)
+
+        frame = Image.new("RGB", (128, 32), (0, 0, 255))
+        display_on_both(frame)
+        time.sleep(1 / 60)
