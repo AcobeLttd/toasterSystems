@@ -247,7 +247,8 @@ def playthe_video(path_to_video: str) -> None:
 
     print(f"Starting video playback for: {path_to_video}")
     matrix_output.put(f"Starting video playback for: {path_to_video}")
-    frame = Image.open("./test-media/horrifying.png").convert("RGB")
+    image = Image.open("./test-media/horrifying.png").convert("RGB")
+    frame = image.resize((WIDTH, HEIGHT), Image.Resampling.BICUBIC)
     
     
     #if not ffmpeg_decode(path_to_video):
@@ -323,5 +324,5 @@ def start(path_to_video: str) -> threading.Thread:
 
 if __name__ == "__main__":
     initMatrix()
-    video_path = "./test-media/theAppleThatIsBad.mp4"
+    video_path = "./test-media/horrifying.png"
     playthe_video(video_path)
